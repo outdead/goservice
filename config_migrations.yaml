@@ -1,0 +1,14 @@
+migration_storage:
+  storage_type: "postgres"
+  dsn: "postgres://postgres:postgres@db_postgresql:5432/migrago?sslmode=disable"
+  schema: "public"
+
+projects:
+  dashboard:
+    migrations:
+    - clickhouse: migrations/clickhouse
+
+databases:
+  clickhouse:
+    type: clickhouse
+    dsn: "clickhouse://db_clickhouse:9000?charset=utf8&database=asmr"
