@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/outdead/echo-skeleton/internal/api/httpserver/middleware"
 	"github.com/outdead/echo-skeleton/internal/api/httpserver/response"
 	"github.com/outdead/echo-skeleton/internal/logger"
 )
@@ -17,15 +17,10 @@ import (
 // ShutdownTimeOut is time to terminate queries when quit signal given.
 const ShutdownTimeOut = 10 * time.Second
 
-// ErrLockedServer возвращается при повторном вызове останвки HTTP сервер.
+// ErrLockedServer returned on repeated call Close() the HTTP server.
 var ErrLockedServer = errors.New("http api server is locked")
 
-type ServerInterface interface {
-	Run()
-	Close() error
-	Errors() <-chan error
-}
-
+// Server defines parameters for running an HTTP server.
 type Server struct {
 	logger *logger.Entry
 	errors chan error
@@ -35,6 +30,7 @@ type Server struct {
 	echo *echo.Echo
 }
 
+// NewServer allocates and returns a new Server.
 func NewServer(log *logger.Entry) *Server {
 	s := Server{
 		logger: log,
@@ -46,6 +42,7 @@ func NewServer(log *logger.Entry) *Server {
 	return &s
 }
 
+// Serve initializes HTTP Server and runs it on received port.
 func (s *Server) Serve(port string) {
 	s.echo = s.newEcho()
 	s.router()
@@ -79,6 +76,7 @@ func (s *Server) Serve(port string) {
 	}()
 }
 
+// Close stops HTTP Server.
 func (s *Server) Close() error {
 	select {
 	case s.quit <- true:
@@ -91,6 +89,7 @@ func (s *Server) Close() error {
 	}
 }
 
+// Errors returns errors channel.
 func (s *Server) Errors() <-chan error {
 	return s.errors
 }
@@ -140,9 +139,10 @@ func (s *Server) reportError(err error) {
 		select {
 		case s.errors <- err:
 		default:
-			// IMPORTANT: Пердполагается, что канал ошибок пробрасывается
-			// функцией Errors() и его читает вызывающая рутина. Если ошибки
-			// никто не читает, то после переполнения буфера ошибок фаталимся.
+			// IMPORTANT: It is assumed that the error channel is forwarded by
+			// the Errors() function and the calling routine reads it. If no one
+			// reads the errors, then after the error buffer overflows we are
+			// exit with fatal level.
 			s.logger.Fatalf("http api server error channel is locked: %s", err)
 		}
 	}

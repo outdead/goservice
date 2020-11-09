@@ -2,6 +2,7 @@ package daemon
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"path"
@@ -9,6 +10,19 @@ import (
 
 	"github.com/outdead/echo-skeleton/internal/logger"
 	"gopkg.in/yaml.v3"
+)
+
+var (
+	// ErrInvalidConfig is a basic configuration validation error. It is wrapped
+	// if config validation fails.
+	ErrInvalidConfig = errors.New("config validation error")
+
+	// ErrParseConfig is returned when parsing the config from the file fails.
+	ErrParseConfig = errors.New("config parse error")
+
+	// ErrInvalidConfigExtension is returned when parsing a config from a file
+	// when the file has an unsupported extension.
+	ErrInvalidConfigExtension = errors.New("invalid config extension")
 )
 
 // Config is main service config structure.

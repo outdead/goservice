@@ -1,7 +1,6 @@
 package daemon
 
 import (
-	"errors"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,18 +9,6 @@ import (
 	"github.com/outdead/echo-skeleton/internal/api/httpserver"
 	"github.com/outdead/echo-skeleton/internal/api/profiler"
 	"github.com/outdead/echo-skeleton/internal/logger"
-)
-
-var (
-	// ErrInvalidConfig базовая ошибка валидации конфигурации.
-	ErrInvalidConfig = errors.New("config validation error")
-
-	// ErrParseConfig возвращается при неудаче парсинга конфига из файла.
-	ErrParseConfig = errors.New("config parse error")
-
-	// ErrInvalidConfigExtension возващается при парсинге конфиге из файле когда
-	// у файла установлено неподдерживаемое расширение.
-	ErrInvalidConfigExtension = errors.New("invalid config extension")
 )
 
 type Daemon struct {

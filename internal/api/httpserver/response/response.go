@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-// Response содержит поля для JSON ответа от HTTP сервера.
+// Response contains fields for JSON response from HTTP server.
 type Response struct {
 	Code    int         `json:"errorCode"`
 	Message string      `json:"errorMessage"`
@@ -14,12 +14,13 @@ type Response struct {
 	Count   int         `json:"count,omitempty"`
 }
 
-// Fields позволяет перечислять поля, входящие в блок Result структуры ответа.
+// Fields allows you to enumerate the fields included in the Result block of
+// the response structure.
 type Fields map[string]interface{}
 
-// ServeResult отправляет JSON ответ с данными result и дополнительным послем
-// count, отвечающим за количество данных, подходящих для возврата в режиме
-// пагинации.
+// ServeResult sends a JSON response with the result data and an additional
+// count, which is responsible for the amount of data suitable for returning
+// in pagination mode.
 func ServeResult(c echo.Context, result interface{}, count ...int) error {
 	response := Response{
 		Code:    0,
@@ -34,29 +35,29 @@ func ServeResult(c echo.Context, result interface{}, count ...int) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// ServeValidateError отправляет JSON ответ с кодом 422 и переданным сообщением
-// об ошибке. Код ответа 422 уведомляет об ошибке валидации.
+// ServeValidateError sends a JSON response with 422 code and the passed error
+// message. The 422 response code reports a validation error.
 func ServeValidateError(c echo.Context, msg ...string) error {
 	return Serve(c, http.StatusUnprocessableEntity, msg...)
 }
 
-// ServeNotFoundError отправляет JSON ответ с кодом 404 и переданным сообщением
-// об ошибке. Код ответа 404 уведомляет об отсутсвии зпрашиваемых данных.
+// ServeNotFoundError sends a JSON response with a 404 code and the passed error
+// message. The 404 response code notifies of the absence of the requested data.
 func ServeNotFoundError(c echo.Context, msg ...string) error {
 	return Serve(c, http.StatusNotFound, msg...)
 }
 
-// ServeInternalServerError отправляет JSON ответ с кодом 500 и переданным
-// сообщением об ошибке. Код ответа 500 уведомляет о внутренней ошибке сервера.
-// Как правило непосредственно произошедшая ошибка не выводится, а скривается и
-// отображается только в логах сервиса.
+// ServeInternalServerError sends a JSON response with a 500 code and the passed
+// error message. The 500 response code notifies an internal server error.
+// As a rule, the error that occurred directly is not displayed, but hidden and
+// displayed only in the service logs.
 func ServeInternalServerError(c echo.Context, msg ...string) error {
 	return Serve(c, http.StatusInternalServerError, msg...)
 }
 
-// Serve отправляет JSON ответ с переданным кодом и сообщением об ошибке.
-// Можно не передавать сообщение об ошибке, в этом случе оно будет взято
-// на основании кода ответа.
+// Serve sends a JSON response with the passed code and error message.
+// It is possible not to pass an error message - in this case it will be taken
+// based on the response code.
 func Serve(c echo.Context, code int, msg ...string) error {
 	if len(msg) != 0 {
 		return serve(c, code, msg[0])

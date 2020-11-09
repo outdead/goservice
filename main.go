@@ -8,13 +8,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// ServiceName содержит имя сервиса. Выводится в логах и при вызове help.
+// ServiceName contains the name of the service. Displayed in logs and when help
+// command is called.
 const ServiceName = "golang echo skeleton"
 
-// ServiceVersion содержит номер версии сервиса в формате семантическо
-// версионирования (http://semver.org/). Выводится в логах и при вызове help.
-// Во время компиляции сервиса можно передать значение версии при помощи
-// флага `-ldflags "-X main.Version=${VERSION}"`.
+// ServiceVersion contains the service version number in the semantic versioning
+// format (http://semver.org/). Displayed in logs and when help command is
+// called. During service compilation, you can pass the version value using the
+// flag `-ldflags "-X main.Version=${VERSION}"`.
 var ServiceVersion = "0.0.0-develop"
 
 func main() {
