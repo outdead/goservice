@@ -1,4 +1,4 @@
-package httpserver
+package http
 
 import (
 	"context"
@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	"github.com/outdead/echo-skeleton/internal/api/httpserver/middleware"
-	"github.com/outdead/echo-skeleton/internal/api/httpserver/response"
 	"github.com/outdead/echo-skeleton/internal/logger"
+	"github.com/outdead/echo-skeleton/internal/server/http/middleware"
+	"github.com/outdead/echo-skeleton/internal/server/http/response"
 )
 
 // ShutdownTimeOut is time to terminate queries when quit signal given.

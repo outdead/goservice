@@ -1,6 +1,6 @@
-package httpserver
+package http
 
-import "github.com/outdead/echo-skeleton/internal/api/httpserver/handler/health"
+import "github.com/outdead/echo-skeleton/internal/server/http/handler/health"
 
 func (s *Server) router() {
 	root := s.echo.Group("")

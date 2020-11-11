@@ -6,9 +6,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/outdead/echo-skeleton/internal/api/httpserver"
-	"github.com/outdead/echo-skeleton/internal/api/profiler"
 	"github.com/outdead/echo-skeleton/internal/logger"
+	"github.com/outdead/echo-skeleton/internal/server/http"
+	"github.com/outdead/echo-skeleton/internal/server/profiler"
 )
 
 type Daemon struct {
@@ -16,8 +16,8 @@ type Daemon struct {
 	errors chan error
 	logger *logger.Entry
 
-	api struct {
-		http *httpserver.Server
+	server struct {
+		http *http.Server
 	}
 }
 
@@ -45,7 +45,7 @@ func (d *Daemon) Run() error {
 	profiler.Serve(d.config.App.ProfilerPort, d.logger)
 
 	// Creates goroutine process for start HTTP server.
-	d.api.http.Serve(d.config.App.Port)
+	d.server.http.Serve(d.config.App.Port)
 
 	interrupter := make(chan os.Signal, 1)
 	signal.Notify(interrupter, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
@@ -65,7 +65,7 @@ Loop:
 		case err := <-d.Errors():
 			d.logger.Info("daemon fatal error occurred, unsubscribe and closing connections...")
 			return err
-		case err := <-d.api.http.Errors():
+		case err := <-d.server.http.Errors():
 			// TODO: Try to recreate http server.
 			d.reportError(err)
 		}
@@ -83,7 +83,7 @@ func (d *Daemon) init() error {
 		d.logger = logger.New().WithAppInfo()
 	}
 
-	d.api.http = httpserver.NewServer(d.logger)
+	d.server.http = http.NewServer(d.logger)
 
 	return nil
 }
@@ -93,7 +93,7 @@ func (d *Daemon) close() error {
 
 	var errs []error
 
-	if err := d.api.http.Close(); err != nil {
+	if err := d.server.http.Close(); err != nil {
 		errs = append(errs, err)
 	}
 
