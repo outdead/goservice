@@ -112,12 +112,17 @@ func (d *Daemon) close() error {
 	return nil
 }
 
+// reportError publishes error to the errors channel.
+// if you do not read errors from the errors channel then after the channel
+// buffer overflows the application exits with a fatal level and the
+// os.Exit(1) exit code.
 func (d *Daemon) reportError(err error) {
 	if err != nil {
 		select {
 		case d.errors <- err:
 		default:
-			d.logger.Errorf("daemon error channel is locked: %v", err)
+			// IMPORTANT: This is a soft version of the application panic.
+			d.logger.Fatalf("daemon error channel is locked: %v", err)
 		}
 	}
 }
