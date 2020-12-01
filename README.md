@@ -1,2 +1,2 @@
 # service-skeleton
-Golang app skeleton using Echo framework
+Golang app skeleton using Echo framework.
