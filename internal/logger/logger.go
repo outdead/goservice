@@ -8,14 +8,6 @@ import (
 
 const DefaultLogLevel = logrus.InfoLevel
 
-// Entry is the final or intermediate Logrus logging entry. It contains all
-// the fields passed with WithField{,s}. It's finally logged when Trace, Debug,
-// Info, Warn, Error, Fatal or Panic is called on it. These objects can be
-// reused and passed around as much as you wish to avoid field duplication.
-type Entry struct {
-	*logrus.Entry
-}
-
 // Logger contains wrapped Logrus logger.
 type Logger struct {
 	*logrus.Logger
@@ -48,32 +40,47 @@ func NewDiscardLogger() *Logger {
 }
 
 // Customize gets values from config and customizes Logger.
-func (l *Logger) Customize(cfg *Config) {
-	l.config = *cfg
-	l.SetLevel(l.config.Level)
+func (log *Logger) Customize(cfg *Config) {
+	log.config = *cfg
+	log.SetLevel(log.config.Level)
 }
 
 // SetLevel injects log level to logger.
-func (l *Logger) SetLevel(level string) {
+func (log *Logger) SetLevel(level string) {
 	logrusLevel, err := logrus.ParseLevel(level)
 	if err != nil {
 		logrusLevel = DefaultLogLevel
 	}
 
-	l.Logger.SetLevel(logrusLevel)
+	log.Logger.SetLevel(logrusLevel)
 }
 
 // SetService injects service name to logger.
-func (l *Logger) SetService(service string) {
-	l.service = service
+func (log *Logger) SetService(service string) {
+	log.service = service
 }
 
 // SetVersion injects service version to logger.
-func (l *Logger) SetVersion(version string) {
-	l.version = version
+func (log *Logger) SetVersion(version string) {
+	log.version = version
 }
 
-// WithAppInfo adds custom fields to the Entry.
-func (l *Logger) WithAppInfo() *Entry {
-	return &Entry{l.WithField("service", l.service).WithField("version", l.version)}
+// NewEntry returns new empty entry.
+func (log *Logger) NewEntry() *Entry {
+	entry := logrus.NewEntry(log.Logger)
+
+	if log.service != "" {
+		entry = entry.WithField("service", log.service)
+	}
+
+	if log.version != "" {
+		entry = entry.WithField("version", log.version)
+	}
+
+	return &Entry{Entry: entry, logger: log}
+}
+
+// Version returns injected service version.
+func (log *Logger) Version() string {
+	return log.version
 }

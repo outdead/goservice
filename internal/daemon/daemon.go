@@ -80,7 +80,7 @@ func (d *Daemon) Errors() <-chan error {
 
 func (d *Daemon) init() error {
 	if d.logger == nil {
-		d.logger = logger.New().WithAppInfo()
+		d.logger = logger.New().NewEntry()
 	}
 
 	d.server.http = http.NewServer(d.logger)

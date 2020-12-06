@@ -41,7 +41,7 @@ func main() {
 	app.Action = action(log)
 
 	if err := app.Run(os.Args); err != nil {
-		log.WithAppInfo().Fatal(err)
+		log.NewEntry().Fatal(err)
 	}
 }
 
@@ -53,7 +53,7 @@ func action(log *logger.Logger) func(c *cli.Context) error {
 		}
 
 		if c.Bool("print") {
-			log.WithAppInfo().Info("got -p flag - print config and terminate")
+			log.NewEntry().Info("got -p flag - print config and terminate")
 			return cfg.Print()
 		}
 
@@ -63,11 +63,11 @@ func action(log *logger.Logger) func(c *cli.Context) error {
 
 		log.Customize(&cfg.App.Log)
 
-		d := daemon.NewDaemon(cfg, log.WithAppInfo())
+		d := daemon.NewDaemon(cfg, log.NewEntry())
 
 		defer func() {
 			if err := d.Close(); err != nil {
-				log.WithAppInfo().Errorf("close daemon err: %s", err)
+				log.NewEntry().Errorf("close daemon err: %s", err)
 			}
 		}()
 
