@@ -1,2 +1,2 @@
 # service-skeleton
-Golang app skeleton using Echo framework.
+Golang daemon skeleton with using Echo framework for creating HTTP server.
