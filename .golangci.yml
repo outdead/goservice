@@ -126,7 +126,6 @@ linters:
   enable-all: true
   disable:
     - gomnd
-    - nlreturn
 
 issues:
   exclude:
