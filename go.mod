@@ -1,4 +1,4 @@
-module github.com/outdead/echo-skeleton
+module github.com/outdead/goservice
 
 go 1.15
 

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
-	"github.com/outdead/echo-skeleton/internal/server/http/response"
+	"github.com/outdead/goservice/internal/server/http/response"
 )
 
 // Handler is wrapper for HTTP API handle functions in health group.

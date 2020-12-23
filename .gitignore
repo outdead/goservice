@@ -5,7 +5,7 @@
  
 # bin
 *.exe
-echo-skeleton
+goservice
  
 # auto
 vendor/

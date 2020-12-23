@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/outdead/echo-skeleton/internal/daemon"
-	"github.com/outdead/echo-skeleton/internal/logger"
+	"github.com/outdead/goservice/internal/daemon"
+	"github.com/outdead/goservice/internal/utils/logutils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -19,7 +19,7 @@ const ServiceName = "golang echo skeleton"
 var ServiceVersion = "0.0.0-develop"
 
 func main() {
-	log := logger.New(logger.SetService(ServiceName), logger.SetVersion(ServiceVersion))
+	log := logutils.New(logutils.SetService(ServiceName), logutils.SetVersion(ServiceVersion))
 
 	app := cli.NewApp()
 	app.Name = ServiceName
@@ -45,7 +45,7 @@ func main() {
 	}
 }
 
-func action(log *logger.Logger) func(c *cli.Context) error {
+func action(log *logutils.Logger) func(c *cli.Context) error {
 	return func(c *cli.Context) error {
 		cfg, err := daemon.NewConfig(c.String("config"))
 		if err != nil {
@@ -54,6 +54,7 @@ func action(log *logger.Logger) func(c *cli.Context) error {
 
 		if c.Bool("print") {
 			log.NewEntry().Info("got -p flag - print config and terminate")
+
 			return cfg.Print()
 		}
 

@@ -1,4 +1,4 @@
-package logger
+package logutils
 
 import (
 	"bytes"
@@ -29,7 +29,7 @@ func TestNewLogger(t *testing.T) {
 	l := New(opts...)
 	l.SetOutput(output)
 
-	l.WithAppInfo().Warning("hello")
+	l.NewEntry().Warning("hello")
 
 	var msg Message
 	if err := json.Unmarshal(output.Bytes(), &msg); err != nil {

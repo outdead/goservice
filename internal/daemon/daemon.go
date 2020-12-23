@@ -6,22 +6,22 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/outdead/echo-skeleton/internal/logger"
-	"github.com/outdead/echo-skeleton/internal/server/http"
-	"github.com/outdead/echo-skeleton/internal/server/profiler"
+	"github.com/outdead/goservice/internal/server/http"
+	"github.com/outdead/goservice/internal/server/profiler"
+	"github.com/outdead/goservice/internal/utils/logutils"
 )
 
 type Daemon struct {
 	config *Config
+	logger *logutils.Entry
 	errors chan error
-	logger *logger.Entry
 
 	server struct {
 		http *http.Server
 	}
 }
 
-func NewDaemon(cfg *Config, log *logger.Entry) *Daemon {
+func NewDaemon(cfg *Config, log *logutils.Entry) *Daemon {
 	d := Daemon{
 		config: cfg,
 		errors: make(chan error, cfg.App.ErrorBuffer),
@@ -42,7 +42,7 @@ func (d *Daemon) Run() error {
 	}
 
 	// Creates goroutine process for start profiler.
-	profiler.Serve(d.config.App.ProfilerPort, d.logger)
+	profiler.Serve("0.0.0.0"+d.config.App.ProfilerPort, d.logger)
 
 	// Creates goroutine process for start HTTP server.
 	d.server.http.Serve(d.config.App.Port)
@@ -54,20 +54,22 @@ func (d *Daemon) Run() error {
 	defer ticker.Stop()
 
 	d.logger.Info("start daemon success")
+
 Loop:
 	for {
 		select {
 		case <-interrupter:
 			d.logger.Info("received an interrupt, unsubscribe and closing connections...")
+
 			break Loop
+		case err := <-d.Errors(): // down here
+			d.logger.Info("daemon fatal error occurred, unsubscribe and closing connections...")
+
+			return err
 		case <-ticker.C:
 			d.logger.Debug("check connections is not implemented")
-		case err := <-d.Errors():
-			d.logger.Info("daemon fatal error occurred, unsubscribe and closing connections...")
-			return err
 		case err := <-d.server.http.Errors():
-			// TODO: Try to recreate http server.
-			d.reportError(err)
+			d.reportError(err) // TODO: Try to recreate http server.
 		}
 	}
 
@@ -80,7 +82,7 @@ func (d *Daemon) Errors() <-chan error {
 
 func (d *Daemon) init() error {
 	if d.logger == nil {
-		d.logger = logger.New().NewEntry()
+		d.logger = logutils.New().NewEntry()
 	}
 
 	d.server.http = http.NewServer(d.logger)
