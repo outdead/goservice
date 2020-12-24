@@ -22,12 +22,12 @@ linters-settings:
     check-blank: true
   funlen:
     # default is 60
-    lines: 70
+    lines: 60
     # default is 40
     statements: 40
   gocognit:
     # minimal code complexity to report, 30 by default (but we recommend 10-20)
-    min-complexity: 32 # TODO: down to 15
+    min-complexity: 15
   goconst:
     # minimal length of string constant, 3 by default
     min-len: 3
@@ -74,7 +74,7 @@ linters-settings:
       - github.com/Sirupsen/logrus: "logrus is allowed to use only by github.com/sirupsen/logrus"
     #  - github.com/sirupsen/logrus: "logging is allowed only by logutils"
   lll:
-    line-length: 140 # 120 is default
+    line-length: 120 # 120 is default
   maligned:
     # print struct with more effective memory layout or not, false by default
     suggest-new: true
@@ -124,7 +124,8 @@ issues:
     - "shadow: declaration of \"err\"" # govet
     - "Profiling endpoint is automatically exposed on /debug/pprof" # gosec
     - "`tableName` is unused" # structcheck
-    - "ServiceVersion` is a global variable" # gochecknoglobals
+    - "ServiceVersion`? is a global variable" # gochecknoglobals
+    - "are|is missing in" # exhaustivestruct
   exclude-rules:
     - linters:
         - lll

@@ -102,16 +102,16 @@ func (s *Server) newEcho() *echo.Echo {
 	e.HideBanner = true
 	e.HidePort = true
 
-	e.HTTPErrorHandler = s.customHTTPErrorHandler
+	e.HTTPErrorHandler = s.httpErrorHandler
 
 	return e
 }
 
-// customHTTPErrorHandler customizes error response.
+// httpErrorHandler customizes error response.
 // @source: https://github.com/labstack/echo/issues/325
-func (s *Server) customHTTPErrorHandler(err error, c echo.Context) {
-	switch t := err.(type) {
-	case *echo.HTTPError:
+func (s *Server) httpErrorHandler(err error, c echo.Context) {
+	var t *echo.HTTPError
+	if errors.As(err, &t) {
 		errorCode := t.Code
 		switch errorCode {
 		case http.StatusNotFound, http.StatusMethodNotAllowed:
@@ -125,7 +125,7 @@ func (s *Server) customHTTPErrorHandler(err error, c echo.Context) {
 				s.reportError(err)
 			}
 		}
-	default:
+	} else {
 		s.logger.WithField("url", c.Path()).Errorf("unexpected http error: %s", err)
 
 		if err := response.ServeInternalServerError(c); err != nil {

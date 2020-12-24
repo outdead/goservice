@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/outdead/goservice/internal/daemon"
@@ -49,7 +50,7 @@ func action(log *logutils.Logger) func(c *cli.Context) error {
 	return func(c *cli.Context) error {
 		cfg, err := daemon.NewConfig(c.String("config"))
 		if err != nil {
-			return err
+			return fmt.Errorf("new config: %w", err)
 		}
 
 		if c.Bool("print") {
@@ -59,7 +60,7 @@ func action(log *logutils.Logger) func(c *cli.Context) error {
 		}
 
 		if err := cfg.Validate(); err != nil {
-			return err
+			return fmt.Errorf("validate config: %w", err)
 		}
 
 		log.Customize(&cfg.App.Log)

@@ -12,13 +12,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Validation errors.
 var (
-	// ErrInvalidConfig is a basic configuration validation error. It is wrapped
-	// if config validation fails.
-	ErrInvalidConfig = errors.New("config validation error")
-
-	// ErrParseConfig is returned when parsing the config from the file fails.
-	ErrParseConfig = errors.New("config parse error")
+	ErrEmptyPort                     = errors.New("app.port is empty")
+	ErrEmptyCheckConnectionsInterval = errors.New("app.check_connections_interval is empty")
+	ErrEmptyErrorBuffer              = errors.New("app.error_buffer is empty")
 
 	// ErrInvalidConfigExtension is returned when parsing a config from a file
 	// when the file has an unsupported extension.
@@ -40,7 +38,7 @@ type Config struct {
 func NewConfig(name string) (*Config, error) {
 	cfg := new(Config)
 	if err := cfg.ParseFromFile(name); err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrParseConfig, err)
+		return nil, err
 	}
 
 	return cfg, nil
@@ -50,7 +48,7 @@ func NewConfig(name string) (*Config, error) {
 func (cfg *Config) ParseFromFile(name string) error {
 	file, err := ioutil.ReadFile(name)
 	if err != nil {
-		return err
+		return fmt.Errorf("read file: %w", err)
 	}
 
 	switch ext := path.Ext(name); ext {
@@ -68,15 +66,15 @@ func (cfg *Config) ParseFromFile(name string) error {
 // Validate checks config to required fields.
 func (cfg *Config) Validate() (err error) {
 	if cfg.App.Port == "" {
-		return fmt.Errorf("%w: app.port is empty", ErrInvalidConfig)
+		return ErrEmptyPort
 	}
 
 	if cfg.App.CheckConnectionsInterval == 0 {
-		return fmt.Errorf("%w: app.check_connections_interval is empty", ErrInvalidConfig)
+		return ErrEmptyCheckConnectionsInterval
 	}
 
 	if cfg.App.ErrorBuffer == 0 {
-		return fmt.Errorf("%w: app.error_buffer is empty", ErrInvalidConfig)
+		return ErrEmptyErrorBuffer
 	}
 
 	return
@@ -85,9 +83,11 @@ func (cfg *Config) Validate() (err error) {
 // Print print config to console.
 func (cfg *Config) Print() error {
 	js, err := json.MarshalIndent(cfg, "", "  ")
-	if err == nil {
-		fmt.Println(string(js))
+	if err != nil {
+		return fmt.Errorf("marshsal: %w", err)
 	}
 
-	return err
+	fmt.Println(string(js))
+
+	return nil
 }
