@@ -68,6 +68,7 @@ linters-settings:
     packages:
       # logging is allowed only by logutils.Log, logrus is allowed to use only in logutils package
       - github.com/Sirupsen/logrus
+      - github.com/pkg/errors
     #  - github.com/sirupsen/logrus
     include-go-root: false
     packages-with-error-message:
