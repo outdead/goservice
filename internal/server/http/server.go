@@ -112,14 +112,13 @@ func (s *Server) newEcho() *echo.Echo {
 func (s *Server) httpErrorHandler(err error, c echo.Context) {
 	var t *echo.HTTPError
 	if errors.As(err, &t) {
-		errorCode := t.Code
-		switch errorCode {
+		switch t.Code {
 		case http.StatusNotFound, http.StatusMethodNotAllowed:
 			if err := response.ServeNotFoundError(c); err != nil {
 				s.reportError(err)
 			}
 		default:
-			s.logger.WithField("url", c.Path()).Errorf("unexpected http code: %d", errorCode)
+			s.logger.WithField("url", c.Path()).Errorf("unexpected http code: %d", t.Code)
 
 			if err := response.ServeInternalServerError(c); err != nil {
 				s.reportError(err)

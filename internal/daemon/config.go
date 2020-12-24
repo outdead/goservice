@@ -84,7 +84,7 @@ func (cfg *Config) Validate() (err error) {
 func (cfg *Config) Print() error {
 	js, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
-		return fmt.Errorf("marshsal: %w", err)
+		return fmt.Errorf("print config: %w", err)
 	}
 
 	fmt.Println(string(js))

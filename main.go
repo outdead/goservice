@@ -11,7 +11,7 @@ import (
 
 // ServiceName contains the name of the service. Displayed in logs and when help
 // command is called.
-const ServiceName = "golang echo skeleton"
+const ServiceName = "goservice"
 
 // ServiceVersion contains the service version number in the semantic versioning
 // format (http://semver.org/). Displayed in logs and when help command is

@@ -126,7 +126,7 @@ issues:
     - "Profiling endpoint is automatically exposed on /debug/pprof" # gosec
     - "`tableName` is unused" # structcheck
     - "ServiceVersion`? is a global variable" # gochecknoglobals
-    - "are|is missing in" # exhaustivestruct
+    - "are|is missing in" # exhaustivestruct # v1.33
   exclude-rules:
     - linters:
         - lll

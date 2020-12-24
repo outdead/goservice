@@ -35,16 +35,39 @@ func ServeResult(c echo.Context, result interface{}, count ...int) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+// ServeError sends a JSON response with the passed code and error message.
+// It is possible not to send an error message, in this case it will be taken
+// based on the response code.
+func ServeError(c echo.Context, code int, msg ...string) error {
+	if len(msg) != 0 {
+		return serve(c, code, msg[0])
+	}
+
+	return serve(c, code, http.StatusText(code))
+}
+
+// ServeBindError sends a JSON response with a 400 code and the passed error
+// message.
+func ServeBindError(c echo.Context, msg ...string) error {
+	return ServeError(c, http.StatusBadRequest, msg...)
+}
+
+// ServeForbiddenError sends a JSON response with a 403 code and the passed error
+// message.
+func ServeForbiddenError(c echo.Context, msg ...string) error {
+	return ServeError(c, http.StatusForbidden, msg...)
+}
+
+// ServeNotFoundError sends a JSON response with a 404 code and the passed error
+// message.
+func ServeNotFoundError(c echo.Context, msg ...string) error {
+	return Serve(c, http.StatusNotFound, msg...)
+}
+
 // ServeValidateError sends a JSON response with 422 code and the passed error
 // message. The 422 response code reports a validation error.
 func ServeValidateError(c echo.Context, msg ...string) error {
 	return Serve(c, http.StatusUnprocessableEntity, msg...)
-}
-
-// ServeNotFoundError sends a JSON response with a 404 code and the passed error
-// message. The 404 response code notifies of the absence of the requested data.
-func ServeNotFoundError(c echo.Context, msg ...string) error {
-	return Serve(c, http.StatusNotFound, msg...)
 }
 
 // ServeInternalServerError sends a JSON response with a 500 code and the passed
