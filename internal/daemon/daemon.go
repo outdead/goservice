@@ -1,11 +1,13 @@
 package daemon
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"github.com/outdead/goservice/internal/connector"
 	"github.com/outdead/goservice/internal/server/http"
 	"github.com/outdead/goservice/internal/server/profiler"
 	"github.com/outdead/goservice/internal/utils/logutils"
@@ -16,6 +18,7 @@ type Daemon struct {
 	logger *logutils.Entry
 	errors chan error
 
+	conn   connector.Connector
 	server struct {
 		http *http.Server
 	}
@@ -85,6 +88,12 @@ func (d *Daemon) init() error {
 		d.logger = logutils.New().NewEntry()
 	}
 
+	var err error
+
+	if d.conn, err = connector.New(&d.config.Connections); err != nil {
+		return fmt.Errorf("connector: %w", err)
+	}
+
 	d.server.http = http.NewServer(d.logger)
 
 	return nil
@@ -97,6 +106,12 @@ func (d *Daemon) close() error {
 
 	if err := d.server.http.Close(); err != nil {
 		errs = append(errs, err)
+	}
+
+	if d.conn != nil {
+		if err := d.conn.Close(); err != nil {
+			errs = append(errs, err)
+		}
 	}
 
 	if len(errs) != 0 {

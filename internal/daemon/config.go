@@ -8,6 +8,7 @@ import (
 	"path"
 	"time"
 
+	"github.com/outdead/goservice/internal/connector"
 	"github.com/outdead/goservice/internal/utils/logutils"
 	"gopkg.in/yaml.v3"
 )
@@ -32,6 +33,7 @@ type Config struct {
 		ErrorBuffer              int             `json:"error_buffer" yaml:"error_buffer"`
 		Log                      logutils.Config `json:"log" yaml:"log"`
 	} `json:"app" yaml:"app"`
+	Connections connector.Config `yaml:"connections" json:"connections"`
 }
 
 // NewConfig creates new config from `name` file data.
@@ -64,7 +66,7 @@ func (cfg *Config) ParseFromFile(name string) error {
 }
 
 // Validate checks config to required fields.
-func (cfg *Config) Validate() (err error) {
+func (cfg *Config) Validate() error {
 	if cfg.App.Port == "" {
 		return ErrEmptyPort
 	}
@@ -77,7 +79,11 @@ func (cfg *Config) Validate() (err error) {
 		return ErrEmptyErrorBuffer
 	}
 
-	return
+	if err := cfg.Connections.Validate(); err != nil {
+		return fmt.Errorf("connections: %w", err)
+	}
+
+	return nil
 }
 
 // Print print config to console.

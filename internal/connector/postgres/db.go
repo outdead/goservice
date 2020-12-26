@@ -92,7 +92,7 @@ func (db *DB) GetServerTime() (time.Time, error) {
 
 	_, err := db.db.QueryOne(pg.Scan(&st), "SELECT now()")
 
-	return st, err
+	return st, fmt.Errorf("postgres: %w", err)
 }
 
 // Close closes database connections.

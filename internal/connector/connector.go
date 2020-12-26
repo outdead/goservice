@@ -33,7 +33,7 @@ func New(cfg *Config) (Connector, error) {
 	}
 
 	if conn.pg, err = postgres.NewDB(&cfg.Postgres); err != nil {
-		return nil, err
+		return nil, conn.close(err)
 	}
 
 	if conn.rmq, err = rabbit.NewClient(&cfg.RabbitMQ); err != nil {

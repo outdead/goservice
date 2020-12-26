@@ -9,6 +9,7 @@ import (
 	// Import ClickHouse driver.
 	_ "github.com/ClickHouse/clickhouse-go"
 	"github.com/jmoiron/sqlx"
+	"github.com/outdead/goservice/internal/utils/multierror"
 )
 
 // ErrLostConnection is returned when connection to database was lost.
@@ -24,7 +25,7 @@ type DB struct {
 func NewDB(cfg *Config) (*DB, error) {
 	if cfg.ZoneInfo != "" {
 		if err := os.Setenv("ZONEINFO", cfg.ZoneInfo); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("clickhouse: %w", err)
 		}
 	}
 
@@ -76,7 +77,7 @@ func (db *DB) GetServerTime() (time.Time, error) {
 	row := db.db.QueryRow("SELECT now()")
 	err := row.Scan(&st)
 
-	return st, err
+	return st, fmt.Errorf("clickhouse: %w", err)
 }
 
 // MultiInsert performs a transactional insert of multiple records.
@@ -87,16 +88,16 @@ func (db *DB) MultiInsert(query string, rows [][]interface{}) error {
 
 	tx, err := db.db.Begin()
 	if err != nil {
-		return err
+		return fmt.Errorf("clickhouse: %w", err)
 	}
 
 	stmt, err := tx.Prepare(query)
 	if err != nil {
 		if err2 := tx.Rollback(); err2 != nil {
-			return fmt.Errorf("multiple errors: %w, %v", err, err2)
+			return fmt.Errorf("clickhouse multiple errors: %w", multierror.New(err, err2))
 		}
 
-		return err
+		return fmt.Errorf("clickhouse: %w", err)
 	}
 
 	defer stmt.Close()
@@ -104,10 +105,10 @@ func (db *DB) MultiInsert(query string, rows [][]interface{}) error {
 	for i := range rows {
 		if _, err := stmt.Exec(rows[i]...); err != nil {
 			if err2 := tx.Rollback(); err2 != nil {
-				return fmt.Errorf("multiple errors: %w, %v", err, err2)
+				return fmt.Errorf("clickhouse multiple errors: %w", multierror.New(err, err2))
 			}
 
-			return err
+			return fmt.Errorf("clickhouse: %w", err)
 		}
 	}
 
