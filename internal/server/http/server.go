@@ -78,6 +78,10 @@ func (s *Server) Serve(port string) {
 
 // Close stops HTTP Server.
 func (s *Server) Close() error {
+	if s.quit == nil {
+		return ErrLockedServer
+	}
+
 	select {
 	case s.quit <- true:
 		s.wg.Wait()

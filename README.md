@@ -8,7 +8,7 @@ Golang daemon skeleton.
 ```yaml
 app:
   port: 8080
-  profiler_port: 8099
+  profiler_addr: "0.0.0.0:8099"
   check_connections_interval: 10m
   error_buffer: 100
   log:

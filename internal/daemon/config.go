@@ -28,7 +28,7 @@ var (
 type Config struct {
 	App struct {
 		Port                     string          `json:"port" yaml:"port"`
-		ProfilerPort             string          `json:"profiler_port" yaml:"profiler_port"`
+		ProfilerAddr             string          `json:"profiler_addr" yaml:"profiler_addr"`
 		CheckConnectionsInterval time.Duration   `json:"check_connections_interval" yaml:"check_connections_interval"`
 		ErrorBuffer              int             `json:"error_buffer" yaml:"error_buffer"`
 		Log                      logutils.Config `json:"log" yaml:"log"`

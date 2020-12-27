@@ -45,7 +45,7 @@ func (d *Daemon) Run() error {
 	}
 
 	// Creates goroutine process for start profiler.
-	profiler.Serve("0.0.0.0"+d.config.App.ProfilerPort, d.logger)
+	profiler.Serve(d.config.App.ProfilerAddr, d.logger)
 
 	// Creates goroutine process for start HTTP server.
 	d.server.http.Serve(d.config.App.Port)
@@ -104,8 +104,10 @@ func (d *Daemon) close() error {
 
 	var errs []error
 
-	if err := d.server.http.Close(); err != nil {
-		errs = append(errs, err)
+	if d.server.http != nil {
+		if err := d.server.http.Close(); err != nil {
+			errs = append(errs, err)
+		}
 	}
 
 	if d.conn != nil {
