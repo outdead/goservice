@@ -90,9 +90,11 @@ func (db *DB) GetServerTime() (time.Time, error) {
 		return st, ErrLostConnection
 	}
 
-	_, err := db.db.QueryOne(pg.Scan(&st), "SELECT now()")
+	if _, err := db.db.QueryOne(pg.Scan(&st), "SELECT now()"); err != nil {
+		return st, fmt.Errorf("postgres: %w", err)
+	}
 
-	return st, fmt.Errorf("postgres: %w", err)
+	return st, nil
 }
 
 // Close closes database connections.

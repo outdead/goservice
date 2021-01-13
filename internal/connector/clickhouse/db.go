@@ -74,10 +74,11 @@ func (db *DB) GetServerTime() (time.Time, error) {
 		return st, ErrLostConnection
 	}
 
-	row := db.db.QueryRow("SELECT now()")
-	err := row.Scan(&st)
+	if err := db.db.QueryRow("SELECT now()").Scan(&st); err != nil {
+		return st, fmt.Errorf("clickhouse: %w", err)
+	}
 
-	return st, fmt.Errorf("clickhouse: %w", err)
+	return st, nil
 }
 
 // MultiInsert performs a transactional insert of multiple records.
