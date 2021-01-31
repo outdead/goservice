@@ -9,19 +9,23 @@ import (
 
 // Validation errors.
 var (
-	ErrNoConsumers = errors.New("consumers are not set")
+	ErrNoConsumers  = errors.New("consumers are not set")
+	ErrNoPublishers = errors.New("publishers are not set")
 
-	ErrEmptyServer                = errors.New("server is empty")
-	ErrEmptyExchangeType          = errors.New("exchange.type is empty")
-	ErrEmptyRoutingKeyOrQueueName = errors.New("routing_key or queue.name is empty")
-	ErrEmptyRoutingKey            = errors.New("routing_key is empty")
-	ErrEmptyQueueName             = errors.New("queue name is empty")
+	ErrEmptyServer                   = errors.New("server is empty")
+	ErrEmptyExchangeType             = errors.New("exchange.type is empty")
+	ErrEmptyRoutingKeyOrQueueName    = errors.New("routing_key or queue.name is empty")
+	ErrEmptyRoutingKeyOrExchangeName = errors.New("routing_key or exchange.name is empty")
+	ErrEmptyRoutingKey               = errors.New("routing_key is empty")
+	ErrEmptyQueueName                = errors.New("queue name is empty")
+	ErrEmptyExchangeName             = errors.New("exchange name is empty")
 )
 
 // Config contains credentials for RabbitMQ.
 type Config struct {
-	Server    ServerConfig              `yaml:"server" json:"server"`
-	Consumers map[string]ConsumerConfig `yaml:"consumers" json:"consumers"`
+	Server     ServerConfig               `yaml:"server" json:"server"`
+	Consumers  map[string]ConsumerConfig  `yaml:"consumers" json:"consumers"`
+	Publishers map[string]PublisherConfig `yaml:"publishers" json:"publishers"`
 }
 
 // Validate checks required fields and validates for allowed values.
@@ -38,25 +42,6 @@ func (cfg *Config) Validate() error {
 		if err := consumer.Validate(); err != nil {
 			return fmt.Errorf("consumers.%s: %w", name, err)
 		}
-	}
-
-	return nil
-}
-
-// Config contains credentials for RabbitMQ queue.
-type ConsumerConfig struct {
-	QueueName  string `yaml:"queue_name" json:"queue_name"`
-	RoutingKey string `yaml:"routing_key" json:"routing_key"`
-}
-
-// Validate checks required fields and validates for allowed values.
-func (cfg *ConsumerConfig) Validate() error {
-	if cfg.QueueName == "" {
-		return ErrEmptyQueueName
-	}
-
-	if cfg.RoutingKey == "" {
-		return ErrEmptyRoutingKey
 	}
 
 	return nil
@@ -96,6 +81,44 @@ func (cfg *ServerConfig) Validate() error {
 	// consume, then queue.name must not be empty
 	if cfg.RoutingKey == "" && cfg.Queue.Name == "" {
 		return ErrEmptyRoutingKeyOrQueueName
+	}
+
+	return nil
+}
+
+// Config contains credentials for RabbitMQ queue.
+type ConsumerConfig struct {
+	QueueName  string `yaml:"queue_name" json:"queue_name"`
+	RoutingKey string `yaml:"routing_key" json:"routing_key"`
+}
+
+// Validate checks required fields and validates for allowed values.
+func (cfg *ConsumerConfig) Validate() error {
+	if cfg.QueueName == "" {
+		return ErrEmptyQueueName
+	}
+
+	if cfg.RoutingKey == "" {
+		return ErrEmptyRoutingKey
+	}
+
+	return nil
+}
+
+// PublisherConfig contains credentials for publish to exchange RabbitMQ.
+type PublisherConfig struct {
+	ExchangeName string `yaml:"exchange_name" json:"exchange_name"`
+	RoutingKey   string `yaml:"routing_key" json:"routing_key"`
+}
+
+// Validate checks required fields and validates for allowed values.
+func (cfg *PublisherConfig) Validate() error {
+	if cfg.ExchangeName == "" {
+		return ErrEmptyExchangeName
+	}
+
+	if cfg.RoutingKey == "" {
+		return ErrEmptyRoutingKey
 	}
 
 	return nil

@@ -114,5 +114,11 @@ func QueryParamTimeUnix(c echo.Context, name string) (value time.Time, err error
 		return value, fmt.Errorf("%s: %w timestamp", name, ErrInvalidQueryParam)
 	}
 
-	return time.Unix(unix, 0), nil
+	// Created time from unix = 0 is not IsZero.
+	// Therefore create time only from a non-zero value.
+	if unix != 0 {
+		return time.Unix(unix, 0), nil
+	}
+
+	return time.Time{}, nil
 }

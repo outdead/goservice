@@ -55,84 +55,39 @@ func (client *Client) Loop() bool {
 	return client.cony.Loop()
 }
 
-// NewPublisher creates new *cony.Publisher.
-func (client *Client) NewPublisher(cb PublishFunc) *cony.Publisher {
-	pbl := cony.NewPublisher(client.config.Server.Exchange.Name, client.config.Server.RoutingKey)
-	client.cony.Publish(pbl)
-
-	go cb(pbl)
-
-	return pbl
-}
-
-// NewPublisher creates new *cony.Publisher and binds to the queue.
-func (client *Client) NewPublisherBind(cb PublishFunc) (*cony.Publisher, error) {
-	if client.config.Server.RoutingKey == "" {
-		return nil, ErrEmptyRoutingKey
+// NewPublisherProcess creates new *cony.Publisher to exchange by routing_key
+// and starts publishing process described in cb.
+// NewPublisherProcess does not declare the queue, so if it was not created earlier,
+// the publication will go to the void.
+func (client *Client) NewPublisherProcess(name string, cb PublishFunc) (*cony.Publisher, error) {
+	pbl, err := client.NewPublisher(name)
+	if err != nil {
+		return nil, err
 	}
-
-	var declares []cony.Declaration
-
-	if client.config.Server.Queue.Name != "" {
-		que := &cony.Queue{
-			Name:       client.config.Server.Queue.Name,
-			AutoDelete: client.config.Server.Queue.AutoDelete,
-			Durable:    client.config.Server.Queue.Durable,
-			Exclusive:  client.config.Server.Queue.Exclusive,
-			Args:       normalizeArgs(client.config.Server.Queue.Args),
-		}
-
-		declares = append(declares, cony.DeclareQueue(que))
-
-		bnd := cony.Binding{
-			Queue: que, // queue
-			Exchange: cony.Exchange{
-				Name:       client.config.Server.Exchange.Name,
-				Kind:       client.config.Server.Exchange.Type,
-				AutoDelete: client.config.Server.Exchange.AutoDelete,
-				Durable:    client.config.Server.Exchange.Durable,
-			},
-			Key: client.config.Server.RoutingKey,
-		}
-
-		declares = append(declares, cony.DeclareBinding(bnd))
-	}
-
-	if len(declares) > 0 {
-		client.cony.Declare(declares)
-	}
-
-	pbl := cony.NewPublisher(client.config.Server.Exchange.Name, client.config.Server.RoutingKey)
-	client.cony.Publish(pbl)
 
 	go cb(pbl)
 
 	return pbl, nil
 }
 
-// NewConsumer creates new *cony.Consumer.
-func (client *Client) NewConsumer(opts ...cony.ConsumerOpt) *cony.Consumer {
-	if client.config.Server.Qos != 0 {
-		opts = append(opts, cony.Qos(client.config.Server.Qos))
+// NewPublisher creates new *cony.Publisher to exchange by routing_key.
+// NewPublisher does not declare the queue, so if it was not created earlier,
+// the publication will go to the void.
+func (client *Client) NewPublisher(name string) (*cony.Publisher, error) {
+	publisherConfig, ok := client.config.Publishers[name]
+	if !ok {
+		return nil, ErrEmptyRoutingKeyOrExchangeName
 	}
 
-	cns := cony.NewConsumer(
-		&cony.Queue{
-			Name:       client.config.Server.Queue.Name,
-			Durable:    client.config.Server.Queue.Durable,
-			AutoDelete: client.config.Server.Queue.AutoDelete,
-			Exclusive:  client.config.Server.Queue.Exclusive,
-		},
-		opts...,
-	)
-	client.cony.Consume(cns)
+	pbl := cony.NewPublisher(publisherConfig.ExchangeName, publisherConfig.RoutingKey)
+	client.cony.Publish(pbl)
 
-	return cns
+	return pbl, nil
 }
 
 // NewConsumerBindTo creates new *cony.Consumer and binds to the queue
 // by routing_key.
-func (client *Client) NewConsumerBindTo(name string, opts ...cony.ConsumerOpt) (*cony.Consumer, error) {
+func (client *Client) NewConsumer(name string, opts ...cony.ConsumerOpt) (*cony.Consumer, error) {
 	consumerConfig, ok := client.config.Consumers[name]
 	if !ok {
 		return nil, ErrEmptyRoutingKeyOrQueueName
