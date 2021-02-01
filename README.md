@@ -17,18 +17,18 @@ app:
 connections:
   postgres:
     addr: "db_postgresql:5432"
-    database: "test"
+    database: "goservice"
     username: "postgres"
     password: "postgres"
     debug: false
   clickhouse:
     addr: "db_clickhouse:9000"
-    database: "test"
+    database: "goservice"
     debug: false
   rabbitmq:
     server:
       qos: 5000
-      server: "amqp://test:tes@queue_rabbitmq:5672/"
+      server: "amqp://goservice:goservice@queue_rabbitmq:5672/"
       routing_key: "rk.test.income"
       queue:
         name: "test.income"
@@ -41,5 +41,9 @@ connections:
       test_income:
         queue_name: "test.income"
         routing_key: "rk.test.income"
+    publishers:
+      test_outcome:
+        exchange_name: "test.outcome"
+        routing_key: "rk.test_outcome"
 ```
 </details>
