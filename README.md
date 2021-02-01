@@ -12,7 +12,7 @@ app:
   check_connections_interval: 10m
   error_buffer: 100
   log:
-    level: info
+    level: "info"
 
 connections:
   postgres:

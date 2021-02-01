@@ -9,13 +9,13 @@ app:
 connections:
   postgres:
     addr: "db_postgresql:5432"
-    database: "test"
+    database: "goservice"
     username: "postgres"
     password: "postgres"
     debug: false
   clickhouse:
     addr: "db_clickhouse:9000"
-    database: "test"
+    database: "goservice"
     debug: false
   rabbitmq:
     server:
