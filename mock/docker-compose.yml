@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  goservice_mock_db_postgresql:
+    image : "postgres:12.5"
+    hostname: "goservice_mock_db_postgresql"
+    container_name: "goservice_mock_db_postgresql"
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./seed/postgresql/1_init.sql:/docker-entrypoint-initdb.d/1_init.sql
+      - ./seed/postgresql/2_create_migrago.sql:/docker-entrypoint-initdb.d/2_create_migrago.sql
+      - ./seed/postgresql/3_create_databases.sql:/docker-entrypoint-initdb.d/3_create_databases.sql
+
+  goservice_mock_db_clickhouse:
+    image: "yandex/clickhouse-server:20.1.2.4"
+    hostname: "goservice_mock_db_clickhouse"
+    container_name: "goservice_mock_db_clickhouse"
+    logging:
+      driver: "none"
+    ports:
+    - "8123:8123"
+    - "9000:9000"
+    volumes:
+      - ./seed/clickhouse/users.xml:/etc/clickhouse-server/users.xml
+      - ./seed/clickhouse/1_create_databases.sql:/docker-entrypoint-initdb.d/1_create_databases.sql
+
+  goservice_mock_rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "goservice_mock_queue_rabbitmq"
+    container_name: "goservice_mock_queue_rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      name: "goservice_mock_queue_rabbitmq"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "goservice"
+      RABBITMQ_DEFAULT_PASS: "goservice"
+      RABBITMQ_DEFAULT_VHOST: "/"

@@ -17,3 +17,4 @@ vendor/
  
 # migrations database
 data/
+mock/data/

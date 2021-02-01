@@ -1,8 +1,6 @@
 package system
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo"
 	"github.com/outdead/goservice/internal/server/http/response"
 )
@@ -15,11 +13,7 @@ func NewHandler() *Handler {
 	return &Handler{}
 }
 
-// Ping responses pong for `health/ping` HTTP request.
-func (h *Handler) Ping() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		return c.JSON(http.StatusOK, response.Response{
-			Message: "pong",
-		})
-	}
+// Ping responses pong for ping HTTP request.
+func (h *Handler) Ping(c echo.Context) error {
+	return response.ServeResult(c, "pong")
 }

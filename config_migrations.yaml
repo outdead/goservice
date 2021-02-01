@@ -11,4 +11,4 @@ projects:
 databases:
   clickhouse:
     type: clickhouse
-    dsn: "clickhouse://db_clickhouse:9000?charset=utf8&database=asmr"
+    dsn: "clickhouse://db_clickhouse:9000?charset=utf8&database=goservice"

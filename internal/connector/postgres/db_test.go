@@ -11,7 +11,7 @@ func TestNewDB(t *testing.T) {
 		wantErr bool
 	}{
 		// {"positive", config,false},
-		{"empty password", Config{Addr: "localhost:5432", Database: "pcs", User: "postgres"}, true},
+		{"empty password", Config{Addr: "localhost:5432", Database: "goservice", User: "postgres"}, true},
 	}
 
 	for _, tt := range tests {
