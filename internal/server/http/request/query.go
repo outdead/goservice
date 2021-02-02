@@ -91,6 +91,25 @@ func QueryParamIntSlice(c echo.Context, name string) (values []int, err error) {
 	return values, nil
 }
 
+// QueryParamInt64Slice gets a variable from GET request parameters and converts it
+// to []int64. If the variable was not passed then empty slice is returned.
+func QueryParamInt64Slice(c echo.Context, name string) (values []int64, err error) {
+	if params := c.QueryParam(name); params != "" {
+		for _, param := range strings.Split(params, ",") {
+			if param != "" {
+				value, err := strconv.ParseInt(param, 10, 64)
+				if err != nil {
+					return values, fmt.Errorf("%s: %w []int64", name, ErrInvalidQueryParam)
+				}
+
+				values = append(values, value)
+			}
+		}
+	}
+
+	return values, nil
+}
+
 // QueryParamTime gets a string variable from GET request parameters and converts
 // it to time.Time string layout. If the variable was not passed then time.Time{}
 // is returned.
