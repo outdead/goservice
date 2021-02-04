@@ -4,22 +4,20 @@ import (
 	"testing"
 )
 
-var config = Config{
-	Addr:     "127.0.0.1:5432",
-	Database: "goservice",
-	User:     "postgres",
-	Password: "postgres",
-	PoolSize: 10,
-	Debug:    true,
-}
-
 func TestConfig_Validate(t *testing.T) {
 	tests := []struct {
 		name    string
 		config  Config
 		wantErr bool
 	}{
-		{"positive validation", config, false},
+		{"positive validation", Config{
+			Addr:     "127.0.0.1:5432",
+			Database: "goservice",
+			User:     "postgres",
+			Password: "postgres",
+			PoolSize: 10,
+			Debug:    true,
+		}, false},
 		{"empty addr", Config{}, true},
 		{"empty database", Config{Addr: "localhost:5432"}, true},
 		{"empty user", Config{Addr: "localhost:5432", Database: "goservice"}, true},
@@ -38,7 +36,16 @@ func TestConfig_Validate(t *testing.T) {
 func TestConfig_GetDataSourceNameN(t *testing.T) {
 	expected := "postgres://postgres:postgres@127.0.0.1:5432/goservice?sslmode=disable"
 
-	if got := config.GetDataSourceName(); got != expected {
+	cfg := Config{
+		Addr:     "127.0.0.1:5432",
+		Database: "goservice",
+		User:     "postgres",
+		Password: "postgres",
+		PoolSize: 10,
+		Debug:    true,
+	}
+
+	if got := cfg.GetDataSourceName(); got != expected {
 		t.Errorf("dns expected: %q, got %q", expected, got)
 	}
 }
