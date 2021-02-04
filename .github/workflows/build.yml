@@ -63,3 +63,6 @@ jobs:
 
     - name: Build
       run: go build -v .
+
+  env:
+      TEST_REAL_POSTGRES: ${{ secrets.TEST_REAL_POSTGRES }}
