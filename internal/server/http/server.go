@@ -103,6 +103,7 @@ func (s *Server) newEcho() *echo.Echo {
 
 	e.Logger.SetOutput(s.logger.Writer())
 	e.Use(middleware.Recover())
+	e.Use(middleware.WithContext())
 	e.HideBanner = true
 	e.HidePort = true
 

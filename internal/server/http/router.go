@@ -7,4 +7,5 @@ func (s *Server) router() {
 
 	systemHandler := system.NewHandler()
 	root.GET("/system/ping", systemHandler.Ping)
+	root.GET("/system/context", systemHandler.ContextTest())
 }
