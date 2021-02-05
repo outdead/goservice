@@ -1,7 +1,7 @@
 package system
 
 import (
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/outdead/goservice/internal/server/http/response"
 )
 

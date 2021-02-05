@@ -5,16 +5,12 @@ go 1.15
 require (
 	github.com/ClickHouse/clickhouse-go v1.4.3
 	github.com/assembla/cony v0.3.2
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-pg/pg/v9 v9.2.0
-	github.com/jmoiron/sqlx v1.2.0
-	github.com/labstack/echo v3.3.10+incompatible
-	github.com/labstack/gommon v0.3.0 // indirect
+	github.com/jmoiron/sqlx v1.3.1
+	github.com/labstack/echo/v4 v4.1.17
 	github.com/sirupsen/logrus v1.7.0
 	github.com/streadway/amqp v1.0.0
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/valyala/fasttemplate v1.2.1 // indirect
-	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

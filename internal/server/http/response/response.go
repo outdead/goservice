@@ -3,7 +3,7 @@ package response
 import (
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 // Response contains fields for JSON response from HTTP server.
