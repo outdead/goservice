@@ -1,12 +1,8 @@
-Service mock
-============
-
+# Service mock
 Service databases connections description.
 
 ## Run
-
-## Docker compose
-
+### Docker compose
 The creation of mocks can be started directly from the root directory of the project.  
 
     docker-compose -p goservice_mock -f mock/docker-compose.yml up -d
@@ -21,10 +17,10 @@ Clean up after the completion of the project:
 
     docker-compose -p goservice_mock -f mock/docker-compose.yml down --remove-orphans
 
-## Performing migrations
+### Performing migrations
 
     migrago -c config_migrations-local.yaml up
 
-## Запуск сервиса
+### Run service
 
     go run main.go -c config-local.yaml
