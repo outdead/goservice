@@ -4,14 +4,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/outdead/goservice/internal/connector"
 	"github.com/outdead/goservice/internal/utils/logutils"
 )
 
 type Process struct {
 	config *Config
 	logger *logutils.Entry
-	conn   connector.Connector
+	repo   DataSupplyModifier
 	errors chan error
 
 	// Sync.
@@ -19,11 +18,11 @@ type Process struct {
 	wg   sync.WaitGroup
 }
 
-func NewProcess(cfg *Config, log *logutils.Entry, conn connector.Connector) *Process {
+func NewProcess(cfg *Config, log *logutils.Entry, repo DataSupplyModifier) *Process {
 	return &Process{
 		config: cfg,
 		logger: log,
-		conn:   conn,
+		repo:   repo,
 		errors: make(chan error, 100),
 	}
 }
