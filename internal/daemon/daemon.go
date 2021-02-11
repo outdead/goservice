@@ -13,6 +13,7 @@ import (
 	"github.com/outdead/goservice/internal/utils/logutils"
 )
 
+// Daemon is main service application.
 type Daemon struct {
 	config *Config
 	logger *logutils.Entry
@@ -24,6 +25,7 @@ type Daemon struct {
 	}
 }
 
+// NewDaemon creates new Daemon.
 func NewDaemon(cfg *Config, log *logutils.Entry) *Daemon {
 	d := Daemon{
 		config: cfg,
@@ -34,6 +36,7 @@ func NewDaemon(cfg *Config, log *logutils.Entry) *Daemon {
 	return &d
 }
 
+// Close stops all daemon routines and closes connections.
 func (d *Daemon) Close() error {
 	return d.close()
 }
@@ -71,6 +74,11 @@ Loop:
 			return err
 		case <-ticker.C:
 			d.logger.Debug("check connections is not implemented")
+		// Getting errors from daemon-controlled connections and goroutines.
+		// For now, errors are transferred to daemon's error channel, which
+		// initiates the application termination. But in the future, here
+		// you can do the processing of each error with a decision on what
+		// to do with it.
 		case err := <-d.server.http.Errors():
 			d.reportError(err) // TODO: Try to recreate http server.
 		}
@@ -79,6 +87,7 @@ Loop:
 	return nil
 }
 
+// Errors returns daemon error channel.
 func (d *Daemon) Errors() <-chan error {
 	return d.errors
 }
