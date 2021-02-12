@@ -12,7 +12,8 @@ import (
 	"github.com/outdead/goservice/internal/utils/multierror"
 )
 
-// DefaultBatchLimit DefaultBatchLimit contains the default value for the multi-insertion elements limit.
+// DefaultBatchLimit DefaultBatchLimit contains the default value for the
+// multi-insertion elements limit.
 const DefaultBatchLimit = 5000
 
 // ErrLostConnection is returned when connection to database was lost.
