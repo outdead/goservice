@@ -12,7 +12,7 @@ import (
 	"github.com/outdead/goservice/internal/utils/multierror"
 )
 
-// DefaultBatchLimit DefaultBatchLimit contains the default value for the
+// DefaultBatchLimit contains the default value for the
 // multi-insertion elements limit.
 const DefaultBatchLimit = 5000
 
