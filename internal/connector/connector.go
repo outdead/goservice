@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/outdead/goservice/internal/connector/clickhouse"
+	"github.com/outdead/goservice/internal/connector/elasticsearch"
 	"github.com/outdead/goservice/internal/connector/postgres"
 	"github.com/outdead/goservice/internal/connector/rabbit"
 	"github.com/outdead/goservice/internal/utils/multierror"
@@ -12,14 +13,16 @@ import (
 // Connector is the interface for databases accessing.
 type Connector interface {
 	io.Closer
-	CH() *clickhouse.DB
 	PG() *postgres.DB
+	CH() *clickhouse.DB
+	ELA() *elasticsearch.Client
 	RMQ() *rabbit.Client
 }
 
 type connector struct {
-	ch  *clickhouse.DB
 	pg  *postgres.DB
+	ch  *clickhouse.DB
+	ela *elasticsearch.Client
 	rmq *rabbit.Client
 }
 
@@ -28,11 +31,15 @@ func New(cfg *Config) (Connector, error) {
 	conn := connector{}
 	var err error
 
+	if conn.pg, err = postgres.NewDB(&cfg.Postgres); err != nil {
+		return nil, conn.close(err)
+	}
+
 	if conn.ch, err = clickhouse.NewDB(&cfg.Clickhouse); err != nil {
 		return nil, conn.close(err)
 	}
 
-	if conn.pg, err = postgres.NewDB(&cfg.Postgres); err != nil {
+	if conn.ela, err = elasticsearch.NewClient(&cfg.Elasticsearch); err != nil {
 		return nil, conn.close(err)
 	}
 
@@ -51,6 +58,11 @@ func (conn *connector) CH() *clickhouse.DB {
 // PG returns pointer to postgres.DB.
 func (conn *connector) PG() *postgres.DB {
 	return conn.pg
+}
+
+// ELA pointer to elasticsearch.Client.
+func (conn *connector) ELA() *elasticsearch.Client {
+	return conn.ela
 }
 
 // RMQ returns pointer to rabbit.Client.
@@ -76,6 +88,10 @@ func (conn *connector) close(prevErrs ...error) error {
 		if err := conn.ch.Close(); err != nil {
 			errs.Append(err)
 		}
+	}
+
+	if conn.ela != nil {
+		conn.ela.Close()
 	}
 
 	if errs.Len() != 0 {

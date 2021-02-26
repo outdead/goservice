@@ -29,6 +29,18 @@ services:
       - ./seed/clickhouse/users.xml:/etc/clickhouse-server/users.xml
       - ./seed/clickhouse/1_create_databases.sql:/docker-entrypoint-initdb.d/1_create_databases.sql
 
+  goservice_mock_db_elasticsearch:
+    image: "elasticsearch:7.10.1"
+    hostname: "goservice_mock_db_elasticsearch"
+    container_name: "goservice_mock_db_elasticsearch"
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
   goservice_mock_rabbitmq:
     image: "rabbitmq:3-management"
     hostname: "goservice_mock_queue_rabbitmq"
