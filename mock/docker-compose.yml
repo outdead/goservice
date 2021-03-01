@@ -23,8 +23,8 @@ services:
     logging:
       driver: "none"
     ports:
-    - "8123:8123"
-    - "9000:9000"
+      - "8123:8123"
+      - "9000:9000"
     volumes:
       - ./seed/clickhouse/users.xml:/etc/clickhouse-server/users.xml
       - ./seed/clickhouse/1_create_databases.sql:/docker-entrypoint-initdb.d/1_create_databases.sql
