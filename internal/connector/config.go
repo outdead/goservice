@@ -7,6 +7,7 @@ import (
 	"github.com/outdead/goservice/internal/connector/elasticsearch"
 	"github.com/outdead/goservice/internal/connector/postgres"
 	"github.com/outdead/goservice/internal/connector/rabbit"
+	"github.com/outdead/goservice/internal/connector/redis"
 )
 
 // Config contains credentials for databases.
@@ -14,6 +15,7 @@ type Config struct {
 	Postgres      postgres.Config      `yaml:"postgres" json:"postgres"`
 	Clickhouse    clickhouse.Config    `yaml:"clickhouse" json:"clickhouse"`
 	Elasticsearch elasticsearch.Config `yaml:"elasticsearch" json:"elasticsearch"`
+	Redis         redis.Config         `yaml:"redis" json:"redis"`
 	RabbitMQ      rabbit.Config        `yaml:"rabbitmq" json:"rabbit_mq"`
 }
 
@@ -29,6 +31,10 @@ func (cfg *Config) Validate() error {
 
 	if err := cfg.Elasticsearch.Validate(); err != nil {
 		return fmt.Errorf("elasticsearch: %w", err)
+	}
+
+	if err := cfg.Redis.Validate(); err != nil {
+		return fmt.Errorf("redis: %w", err)
 	}
 
 	if err := cfg.RabbitMQ.Validate(); err != nil {

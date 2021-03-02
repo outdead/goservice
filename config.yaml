@@ -21,6 +21,10 @@ connections:
     addr: "http://db_elasticsearch:9200"
     database: "goservice"
     healthcheck_interval: "5s"
+  redis:
+    addr: "db_redis:6379"
+    db: 0
+    ttl: "12h"
   rabbitmq:
     server:
       qos: 5000

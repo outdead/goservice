@@ -7,6 +7,7 @@ import (
 	"github.com/outdead/goservice/internal/connector/elasticsearch"
 	"github.com/outdead/goservice/internal/connector/postgres"
 	"github.com/outdead/goservice/internal/connector/rabbit"
+	"github.com/outdead/goservice/internal/connector/redis"
 	"github.com/outdead/goservice/internal/utils/multierror"
 )
 
@@ -16,14 +17,16 @@ type Connector interface {
 	PG() *postgres.DB
 	CH() *clickhouse.DB
 	ELA() *elasticsearch.Client
+	Redis() *redis.Client
 	RMQ() *rabbit.Client
 }
 
 type connector struct {
-	pg  *postgres.DB
-	ch  *clickhouse.DB
-	ela *elasticsearch.Client
-	rmq *rabbit.Client
+	pg    *postgres.DB
+	ch    *clickhouse.DB
+	ela   *elasticsearch.Client
+	redis *redis.Client
+	rmq   *rabbit.Client
 }
 
 // New establishes new connections from configuration parameters.
@@ -40,6 +43,10 @@ func New(cfg *Config) (Connector, error) {
 	}
 
 	if conn.ela, err = elasticsearch.NewClient(&cfg.Elasticsearch); err != nil {
+		return nil, conn.close(err)
+	}
+
+	if conn.redis, err = redis.NewClient(&cfg.Redis); err != nil {
 		return nil, conn.close(err)
 	}
 
@@ -60,9 +67,14 @@ func (conn *connector) PG() *postgres.DB {
 	return conn.pg
 }
 
-// ELA pointer to elasticsearch.Client.
+// ELA returns pointer to elasticsearch.Client.
 func (conn *connector) ELA() *elasticsearch.Client {
 	return conn.ela
+}
+
+// Redis returns pointer to redis.Client.
+func (conn *connector) Redis() *redis.Client {
+	return conn.redis
 }
 
 // RMQ returns pointer to rabbit.Client.
@@ -92,6 +104,12 @@ func (conn *connector) close(prevErrs ...error) error {
 
 	if conn.ela != nil {
 		conn.ela.Close()
+	}
+
+	if conn.redis != nil {
+		if err := conn.redis.Close(); err != nil {
+			errs.Append(err)
+		}
 	}
 
 	if errs.Len() != 0 {
