@@ -95,6 +95,11 @@ func (client *Client) Del(key string) error {
 	return cmd.Err()
 }
 
+// IsErrNoRows returns true if err is ErrNoRows.
+func (client *Client) IsErrNoRows(err error) bool {
+	return errors.Is(err, ErrNoRows)
+}
+
 // Close closes connection to database.
 func (client *Client) Close() error {
 	if client.conn == nil {
