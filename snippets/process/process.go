@@ -7,6 +7,7 @@ import (
 	"github.com/outdead/goservice/internal/utils/logutils"
 )
 
+// Process performs work in a separate goroutine.
 type Process struct {
 	config *Config
 	logger *logutils.Entry
@@ -18,6 +19,7 @@ type Process struct {
 	wg   sync.WaitGroup
 }
 
+// NewProcess creates and returns new Process.
 func NewProcess(cfg *Config, log *logutils.Entry, repo DataSupplyModifier) *Process {
 	return &Process{
 		config: cfg,
@@ -27,10 +29,12 @@ func NewProcess(cfg *Config, log *logutils.Entry, repo DataSupplyModifier) *Proc
 	}
 }
 
+// Errors returns errors channel.
 func (p *Process) Errors() <-chan error {
 	return p.errors
 }
 
+// Run starts goroutine process.
 func (p *Process) Run() {
 	if p.config.Disabled {
 		p.logger.Debug("cannot run disabled process")
@@ -60,6 +64,7 @@ func (p *Process) Run() {
 	}
 }
 
+// Quit stops all processes.
 func (p *Process) Quit() {
 	if p.config.Disabled {
 		p.logger.Debug("cannot quit disabled process")
