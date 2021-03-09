@@ -12,17 +12,16 @@ import (
 
 // FakeModel implements Model interface.
 type FakeModel struct {
-	PostID          int64  `json:"post_id"`
-	System          string `json:"system"`
-	ExternalGroupID int64  `json:"external_group_id"`
+	ID   int64  `json:"id"`
+	Data string `json:"data"`
 }
 
 func (m *FakeModel) TableName() string {
-	return "post_search"
+	return "test"
 }
 
 func (m *FakeModel) CalculateID() string {
-	return fmt.Sprintf("%d_%s_%d", m.PostID, m.System, m.ExternalGroupID)
+	return fmt.Sprintf("%d", m.ID)
 }
 
 func TestClient_MultiInsert(t *testing.T) {
@@ -43,13 +42,13 @@ func TestClient_MultiInsert(t *testing.T) {
 			// Cleanup.
 			defer client.Conn().DeleteIndex(cfg.Database).Do(context.Background())
 
-			wantPost := FakeModel{PostID: 1231, System: "prizma", ExternalGroupID: 1}
-			wantID := "1231_prizma_1"
+			wantPost := FakeModel{ID: 1231, Data: "data 1"}
+			wantID := "1231"
 
 			posts := []elasticsearch.Model{
 				&wantPost,
-				&FakeModel{PostID: 1232, System: "prizma", ExternalGroupID: 2},
-				&FakeModel{PostID: 1233, System: "prizma", ExternalGroupID: 3},
+				&FakeModel{ID: 1232, Data: "data 2"},
+				&FakeModel{ID: 1233, Data: "data 3"},
 			}
 
 			if err := client.MultiInsert(posts); err != nil {

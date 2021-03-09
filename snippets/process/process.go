@@ -11,7 +11,7 @@ import (
 type Process struct {
 	config *Config
 	logger *logutils.Entry
-	repo   DataSupplyModifier
+	repo   Repository
 	errors chan error
 
 	// Sync.
@@ -20,7 +20,7 @@ type Process struct {
 }
 
 // NewProcess creates and returns new Process.
-func NewProcess(cfg *Config, log *logutils.Entry, repo DataSupplyModifier) *Process {
+func NewProcess(cfg *Config, log *logutils.Entry, repo Repository) *Process {
 	return &Process{
 		config: cfg,
 		logger: log,

@@ -2,13 +2,13 @@ package process_test
 
 import (
 	"bytes"
+	"fmt"
+	"strings"
 	"testing"
 	"time"
 
-	"fmt"
 	"github.com/outdead/goservice/internal/utils/logutils"
 	"github.com/outdead/goservice/snippets/process"
-	"strings"
 )
 
 type FakeRepo struct {
