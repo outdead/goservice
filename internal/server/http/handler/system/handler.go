@@ -13,6 +13,16 @@ func NewHandler() *Handler {
 	return &Handler{}
 }
 
+// Ping godoc
+// @Summary System info
+// @Description Get system info
+// @Tags system
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} response.Response
+// @Failure 200 {object} response.Response
+// @Router /system/ping [get]
+//
 // Ping responses pong for ping HTTP request.
 func (h *Handler) Ping(c echo.Context) error {
 	return response.ServeResult(c, "pong")

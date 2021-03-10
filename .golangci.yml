@@ -127,6 +127,7 @@ issues:
     - "`tableName` is unused" # structcheck
     - "ServiceVersion`? is a global variable" # gochecknoglobals
     - "are|is missing in" # exhaustivestruct # v1.33
+    - "a blank import should be only in a main or test package, or have a comment justifying it" # golint # conflicts with gci
   exclude-rules:
     - linters:
         - lll

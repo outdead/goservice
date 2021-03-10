@@ -19,3 +19,8 @@ devtools/
 # migrations database
 data/
 mock/data/
+
+# swagger
+docs.go
+swagger.json
+swagger.yaml
