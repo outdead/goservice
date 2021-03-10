@@ -12,8 +12,9 @@ vendor/
 *.pb.go
 *_easyjson.go
  
-# local configs
+# local
 *local.yaml
+devtools/
  
 # migrations database
 data/
