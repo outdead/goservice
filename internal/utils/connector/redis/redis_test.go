@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/outdead/goservice/internal/connector/redis"
+	"github.com/outdead/goservice/internal/utils/connector/redis"
 )
 
 func TestNewClient(t *testing.T) {

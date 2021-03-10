@@ -1,4 +1,4 @@
-package logutils
+package logutil
 
 // Config contains Logger settings.
 type Config struct {

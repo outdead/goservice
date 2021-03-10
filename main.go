@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/outdead/goservice/internal/daemon"
-	"github.com/outdead/goservice/internal/utils/logutils"
+	"github.com/outdead/goservice/internal/utils/logutil"
 	"github.com/urfave/cli/v2"
 )
 
@@ -20,7 +20,7 @@ const ServiceName = "goservice"
 var ServiceVersion = "0.0.0-develop"
 
 func main() {
-	log := logutils.New(logutils.SetService(ServiceName), logutils.SetVersion(ServiceVersion))
+	log := logutil.New(logutil.SetService(ServiceName), logutil.SetVersion(ServiceVersion))
 
 	app := cli.NewApp()
 	app.Name = ServiceName
@@ -46,7 +46,7 @@ func main() {
 	}
 }
 
-func action(log *logutils.Logger) func(c *cli.Context) error {
+func action(log *logutil.Logger) func(c *cli.Context) error {
 	return func(c *cli.Context) error {
 		cfg, err := daemon.NewConfig(c.String("config"))
 		if err != nil {

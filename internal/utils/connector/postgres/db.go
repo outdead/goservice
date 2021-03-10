@@ -59,7 +59,7 @@ func NewDB(cfg *Config) (*DB, error) {
 	return &db, nil
 }
 
-// Config returns a pointer to the Config with which the connection was made.
+// Dialer returns a pointer to the Dialer with which the connection was made.
 func (db *DB) Config() *Config {
 	return db.config
 }

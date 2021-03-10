@@ -8,8 +8,8 @@ import (
 	"path"
 	"time"
 
-	"github.com/outdead/goservice/internal/connector"
-	"github.com/outdead/goservice/internal/utils/logutils"
+	"github.com/outdead/goservice/internal/utils/connector"
+	"github.com/outdead/goservice/internal/utils/logutil"
 	"gopkg.in/yaml.v3"
 )
 
@@ -27,11 +27,11 @@ var (
 // Config is main service config structure.
 type Config struct {
 	App struct {
-		Port                     string          `json:"port" yaml:"port"`
-		ProfilerAddr             string          `json:"profiler_addr" yaml:"profiler_addr"`
-		CheckConnectionsInterval time.Duration   `json:"check_connections_interval" yaml:"check_connections_interval"`
-		ErrorBuffer              int             `json:"error_buffer" yaml:"error_buffer"`
-		Log                      logutils.Config `json:"log" yaml:"log"`
+		Port                     string         `json:"port" yaml:"port"`
+		ProfilerAddr             string         `json:"profiler_addr" yaml:"profiler_addr"`
+		CheckConnectionsInterval time.Duration  `json:"check_connections_interval" yaml:"check_connections_interval"`
+		ErrorBuffer              int            `json:"error_buffer" yaml:"error_buffer"`
+		Log                      logutil.Config `json:"log" yaml:"log"`
 	} `json:"app" yaml:"app"`
 	Connections connector.Config `yaml:"connections" json:"connections"`
 }

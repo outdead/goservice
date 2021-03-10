@@ -6,12 +6,12 @@ import (
 	// Load the dependency to enable the profiler.
 	_ "net/http/pprof"
 
-	"github.com/outdead/goservice/internal/utils/logutils"
+	"github.com/outdead/goservice/internal/utils/logutil"
 )
 
 // Serve starts an HTTP server on the given port and allows you to profile the
 // service by reference {host}:{port}/debug/pprof/.
-func Serve(addr string, log *logutils.Entry) {
+func Serve(addr string, log *logutil.Entry) {
 	if addr != "" {
 		go func() {
 			log.Error(http.ListenAndServe(addr, nil))

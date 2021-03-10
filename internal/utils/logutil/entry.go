@@ -1,4 +1,4 @@
-package logutils
+package logutil
 
 import "github.com/sirupsen/logrus"
 

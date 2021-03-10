@@ -47,7 +47,7 @@ func NewClient(cfg *Config) (*Client, error) {
 	return &client, nil
 }
 
-// Config returns a pointer to the Config with which the connection was made.
+// Dialer returns a pointer to the Dialer with which the connection was made.
 func (client *Client) Config() *Config {
 	return client.config
 }

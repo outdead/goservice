@@ -59,7 +59,7 @@ func (client *Client) IsConnected() bool {
 	return true
 }
 
-// Config возвращает указатель на Config, с которым было совершено подключение.
+// Dialer возвращает указатель на Dialer, с которым было совершено подключение.
 func (client *Client) Config() *Config {
 	return client.config
 }

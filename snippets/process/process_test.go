@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/outdead/goservice/internal/utils/logutils"
+	"github.com/outdead/goservice/internal/utils/logutil"
 	"github.com/outdead/goservice/snippets/process"
 )
 
@@ -30,7 +30,7 @@ func TestNewProcess(t *testing.T) {
 		StartInterval: time.Duration(1 * time.Second),
 	}
 
-	log := logutils.New()
+	log := logutil.New()
 	log.SetLevel("debug")
 	log.SetOutput(output)
 

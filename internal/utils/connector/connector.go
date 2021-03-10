@@ -3,11 +3,11 @@ package connector
 import (
 	"io"
 
-	"github.com/outdead/goservice/internal/connector/clickhouse"
-	"github.com/outdead/goservice/internal/connector/elasticsearch"
-	"github.com/outdead/goservice/internal/connector/postgres"
-	"github.com/outdead/goservice/internal/connector/rabbit"
-	"github.com/outdead/goservice/internal/connector/redis"
+	"github.com/outdead/goservice/internal/utils/connector/clickhouse"
+	"github.com/outdead/goservice/internal/utils/connector/elasticsearch"
+	"github.com/outdead/goservice/internal/utils/connector/postgres"
+	"github.com/outdead/goservice/internal/utils/connector/rabbit"
+	"github.com/outdead/goservice/internal/utils/connector/redis"
 	"github.com/outdead/goservice/internal/utils/multierror"
 )
 

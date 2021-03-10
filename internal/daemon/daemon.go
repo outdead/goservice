@@ -7,16 +7,16 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/outdead/goservice/internal/connector"
 	"github.com/outdead/goservice/internal/server/http"
 	"github.com/outdead/goservice/internal/server/profiler"
-	"github.com/outdead/goservice/internal/utils/logutils"
+	"github.com/outdead/goservice/internal/utils/connector"
+	"github.com/outdead/goservice/internal/utils/logutil"
 )
 
 // Daemon is main service application.
 type Daemon struct {
 	config *Config
-	logger *logutils.Entry
+	logger *logutil.Entry
 	errors chan error
 
 	conn   connector.Connector
@@ -26,7 +26,7 @@ type Daemon struct {
 }
 
 // NewDaemon creates new Daemon.
-func NewDaemon(cfg *Config, log *logutils.Entry) *Daemon {
+func NewDaemon(cfg *Config, log *logutil.Entry) *Daemon {
 	d := Daemon{
 		config: cfg,
 		errors: make(chan error, cfg.App.ErrorBuffer),
@@ -94,7 +94,7 @@ func (d *Daemon) Errors() <-chan error {
 
 func (d *Daemon) init() error {
 	if d.logger == nil {
-		d.logger = logutils.New().NewEntry()
+		d.logger = logutil.New().NewEntry()
 	}
 
 	var err error

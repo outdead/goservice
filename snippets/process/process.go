@@ -4,13 +4,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/outdead/goservice/internal/utils/logutils"
+	"github.com/outdead/goservice/internal/utils/logutil"
 )
 
 // Process performs work in a separate goroutine.
 type Process struct {
 	config *Config
-	logger *logutils.Entry
+	logger *logutil.Entry
 	repo   Repository
 	errors chan error
 
@@ -20,7 +20,7 @@ type Process struct {
 }
 
 // NewProcess creates and returns new Process.
-func NewProcess(cfg *Config, log *logutils.Entry, repo Repository) *Process {
+func NewProcess(cfg *Config, log *logutil.Entry, repo Repository) *Process {
 	return &Process{
 		config: cfg,
 		logger: log,

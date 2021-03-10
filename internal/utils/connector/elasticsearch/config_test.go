@@ -3,7 +3,7 @@ package elasticsearch_test
 import (
 	"testing"
 
-	"github.com/outdead/goservice/internal/connector/elasticsearch"
+	"github.com/outdead/goservice/internal/utils/connector/elasticsearch"
 )
 
 var config = elasticsearch.Config{

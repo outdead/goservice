@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/outdead/goservice/internal/server/http/middleware"
 	"github.com/outdead/goservice/internal/server/http/response"
-	"github.com/outdead/goservice/internal/utils/logutils"
+	"github.com/outdead/goservice/internal/utils/logutil"
 )
 
 // ShutdownTimeOut is time to terminate queries when quit signal given.
@@ -22,7 +22,7 @@ var ErrLockedServer = errors.New("http api server is locked")
 
 // Server defines parameters for running an HTTP server.
 type Server struct {
-	logger *logutils.Entry
+	logger *logutil.Entry
 	errors chan error
 	quit   chan bool
 	wg     sync.WaitGroup
@@ -31,7 +31,7 @@ type Server struct {
 }
 
 // NewServer allocates and returns a new Server.
-func NewServer(log *logutils.Entry) *Server {
+func NewServer(log *logutil.Entry) *Server {
 	s := Server{
 		logger: log,
 		errors: make(chan error, 100),
