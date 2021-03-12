@@ -56,8 +56,8 @@ func (d *Daemon) Run() error {
 	interrupter := make(chan os.Signal, 1)
 	signal.Notify(interrupter, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
-	ticker := time.NewTicker(d.config.App.CheckConnectionsInterval)
-	defer ticker.Stop()
+	refresher := time.NewTicker(d.config.App.CheckConnectionsInterval)
+	defer refresher.Stop()
 
 	d.logger.Info("start daemon success")
 
@@ -72,7 +72,7 @@ Loop:
 			d.logger.Info("daemon fatal error occurred, unsubscribe and closing connections...")
 
 			return err
-		case <-ticker.C:
+		case <-refresher.C:
 			d.logger.Debug("check connections")
 
 			// If an error is received, a fatal error is reported and the service is terminated.
