@@ -1,5 +1,5 @@
 # goservice
-Golang daemon skeleton.
+Golang daemon skeleton with HTTP server.
 
 ## Develop
 
