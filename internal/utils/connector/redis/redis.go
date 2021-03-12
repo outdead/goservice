@@ -11,6 +11,9 @@ import (
 // ErrNoRows is returned when Get returned zero records.
 var ErrNoRows = errors.New("key not found")
 
+// ErrLostConnection is returned when connection to database was lost.
+var ErrLostConnection = errors.New("redis: connection is lost")
+
 // Client is a database handle representing connection to Redis.
 type Client struct {
 	config *Config

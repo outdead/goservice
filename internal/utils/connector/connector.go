@@ -14,6 +14,7 @@ import (
 // Connector is the interface for databases accessing.
 type Connector interface {
 	io.Closer
+	CheckConnections() error
 	PG() *postgres.DB
 	CH() *clickhouse.DB
 	ELA() *elasticsearch.Client
@@ -55,6 +56,24 @@ func New(cfg *Config) (Connector, error) {
 	}
 
 	return &conn, nil
+}
+
+// CheckConnections checks database connections.
+// TODO: Add multierror.
+func (conn *connector) CheckConnections() error {
+	if ok := conn.PG().IsConnected(); !ok {
+		return postgres.ErrLostConnection
+	}
+
+	if ok := conn.CH().IsConnected(); !ok {
+		return clickhouse.ErrLostConnection
+	}
+
+	if ok := conn.Redis().IsConnected(); !ok {
+		return redis.ErrLostConnection
+	}
+
+	return nil
 }
 
 // CH returns pointer to clickhouse.DB.

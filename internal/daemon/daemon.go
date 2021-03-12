@@ -73,7 +73,12 @@ Loop:
 
 			return err
 		case <-ticker.C:
-			d.logger.Debug("check connections is not implemented")
+			d.logger.Debug("check connections")
+
+			// If an error is received, a fatal error is reported and the service is terminated.
+			if err := d.conn.CheckConnections(); err != nil {
+				d.reportError(err)
+			}
 		// Getting errors from daemon-controlled connections and goroutines.
 		// For now, errors are transferred to daemon's error channel, which
 		// initiates the application termination. But in the future, here
