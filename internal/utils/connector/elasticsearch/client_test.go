@@ -29,7 +29,7 @@ func TestClient_MultiInsert(t *testing.T) {
 		t.Run("real db elastic", func(t *testing.T) {
 			cfg := elasticsearch.Config{
 				Addr:     getVar("TEST_ELASTIC_ADDR", "http://localhost:9200"),
-				Database: "test",
+				Database: "connector_test",
 			}
 
 			client, err := elasticsearch.NewClient(&cfg)
