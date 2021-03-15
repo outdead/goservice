@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/outdead/goservice/internal/daemon"
+	"github.com/outdead/goservice/internal/app/daemon"
 	"github.com/outdead/goservice/internal/utils/logutil"
 	"github.com/urfave/cli/v2"
 )

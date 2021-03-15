@@ -2,7 +2,7 @@ package system
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/outdead/goservice/internal/server/http/response"
+	"github.com/outdead/goservice/internal/app/server/http/response"
 )
 
 // Handler is wrapper for HTTP API handle functions in health group.

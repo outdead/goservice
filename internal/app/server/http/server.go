@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"github.com/outdead/goservice/internal/server/http/middleware"
-	"github.com/outdead/goservice/internal/server/http/response"
+	"github.com/outdead/goservice/internal/app/server/http/middleware"
+	"github.com/outdead/goservice/internal/app/server/http/response"
 	"github.com/outdead/goservice/internal/utils/logutil"
 )
 

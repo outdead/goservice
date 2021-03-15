@@ -1,8 +1,8 @@
 package http
 
 import (
-	_ "github.com/outdead/goservice/internal/server/http/docs"
-	"github.com/outdead/goservice/internal/server/http/handler/system"
+	_ "github.com/outdead/goservice/internal/app/server/http/docs"
+	"github.com/outdead/goservice/internal/app/server/http/handler/system"
 	swagger "github.com/swaggo/echo-swagger"
 )
 

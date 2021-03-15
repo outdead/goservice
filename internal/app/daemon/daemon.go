@@ -7,8 +7,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/outdead/goservice/internal/server/http"
-	"github.com/outdead/goservice/internal/server/profiler"
+	"github.com/outdead/goservice/internal/app/server/http"
+	"github.com/outdead/goservice/internal/app/server/profiler"
 	"github.com/outdead/goservice/internal/utils/connector"
 	"github.com/outdead/goservice/internal/utils/logutil"
 )
