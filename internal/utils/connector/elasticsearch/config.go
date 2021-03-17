@@ -9,8 +9,9 @@ const DefaultHealthcheckInterval = 5 * time.Second
 
 // Config validation errors.
 var (
-	ErrEmptyAddr     = errors.New("addr is empty")
-	ErrEmptyDatabase = errors.New("database is empty")
+	ErrEmptyAddr           = errors.New("addr is empty")
+	ErrEmptyDatabase       = errors.New("database is empty")
+	ErrHealthcheckInterval = errors.New("healthcheck_interval must be positive number or zero")
 )
 
 // Config contains credentials for Elasticsearch database.
@@ -28,6 +29,10 @@ func (cfg Config) Validate() error {
 
 	if cfg.Database == "" {
 		return ErrEmptyDatabase
+	}
+
+	if cfg.HealthcheckInterval < 0 {
+		return ErrHealthcheckInterval
 	}
 
 	return nil

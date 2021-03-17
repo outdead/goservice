@@ -21,6 +21,7 @@ func TestConfig_Validate(t *testing.T) {
 		{"positive validation", config, false},
 		{"empty addr", elasticsearch.Config{}, true},
 		{"empty database", elasticsearch.Config{Addr: "http://localhost:9200"}, true},
+		{"negative healthcheck_interval", elasticsearch.Config{Addr: "http://localhost:9200", HealthcheckInterval: -1}, true},
 	}
 
 	for _, tt := range tests {
