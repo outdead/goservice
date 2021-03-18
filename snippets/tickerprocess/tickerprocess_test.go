@@ -1,4 +1,4 @@
-package process_test
+package tickerprocess_test
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/outdead/goservice/internal/utils/logutil"
-	"github.com/outdead/goservice/snippets/process"
+	"github.com/outdead/goservice/snippets/tickerprocess"
 )
 
 type FakeRepo struct {
@@ -26,7 +26,7 @@ func NewFakeRepo() *FakeRepo {
 func TestNewProcess(t *testing.T) {
 	output := &bytes.Buffer{}
 
-	cfg := process.Config{
+	cfg := tickerprocess.Config{
 		StartInterval: time.Duration(1 * time.Second),
 	}
 
@@ -37,7 +37,7 @@ func TestNewProcess(t *testing.T) {
 	// Inject interface functions.
 	repo := NewFakeRepo()
 
-	processor := process.NewProcess(&cfg, log.NewEntry(), repo)
+	processor := tickerprocess.NewProcess(&cfg, repo, log.NewEntry())
 
 	go processor.Run()
 

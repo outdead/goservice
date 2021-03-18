@@ -1,4 +1,4 @@
-package process
+package tickerprocess
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 
 // Validation errors.
 var (
-	ErrEmptyStartInterval = errors.New("start_interval is empty")
+	ErrEmptyStartInterval = errors.New("start_interval must be positive number")
 )
 
 // Config is config for process.
@@ -23,7 +23,7 @@ func (cfg *Config) Validate() error {
 		return nil
 	}
 
-	if cfg.StartInterval == 0 {
+	if cfg.StartInterval <= 0 {
 		return ErrEmptyStartInterval
 	}
 

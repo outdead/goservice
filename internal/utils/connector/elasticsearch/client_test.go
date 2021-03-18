@@ -25,7 +25,7 @@ func (m *FakeModel) CalculateID() string {
 }
 
 func TestClient_MultiInsert(t *testing.T) {
-	if run := getVar("TEST_ELASTIC", "false"); run == "true" {
+	if run := getVar("TEST_REAL_ELASTIC", "false"); run == "true" {
 		t.Run("real db elastic", func(t *testing.T) {
 			cfg := elasticsearch.Config{
 				Addr:     getVar("TEST_ELASTIC_ADDR", "http://localhost:9200"),

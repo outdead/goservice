@@ -20,7 +20,7 @@ func TestNewClient(t *testing.T) {
 		{"wrong addr", redis.Config{Addr: "localhost:4444"}, true},
 	}
 
-	if run := getVar("TEST_REDIS", "false"); run == "true" {
+	if run := getVar("TEST_REAL_REDIS", "false"); run == "true" {
 		tests = append(tests, TestCase{
 			name: "real db positive",
 			config: redis.Config{

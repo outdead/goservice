@@ -1,4 +1,4 @@
-package process
+package tickerprocess
 
 import (
 	"sync"
@@ -7,20 +7,26 @@ import (
 	"github.com/outdead/goservice/internal/utils/logutil"
 )
 
+// Repository describes getting and changing data methods.
+type Repository interface {
+}
+
 // Process performs work in a separate goroutine.
 type Process struct {
 	config *Config
 	logger *logutil.Entry
-	repo   Repository
 	errors chan error
 
+	repo Repository
+
 	// Sync.
-	quit chan bool
-	wg   sync.WaitGroup
+	quit    chan bool
+	started bool
+	wg      sync.WaitGroup
 }
 
 // NewProcess creates and returns new Process.
-func NewProcess(cfg *Config, log *logutil.Entry, repo Repository) *Process {
+func NewProcess(cfg *Config, repo Repository, log *logutil.Entry) *Process {
 	return &Process{
 		config: cfg,
 		logger: log,
@@ -42,12 +48,19 @@ func (p *Process) Run() {
 		return
 	}
 
+	if p.started {
+		p.logger.Warning("process already been started")
+
+		return
+	}
+
 	p.logger.Info("process started")
 
 	ticker := time.NewTicker(p.config.StartInterval)
 	defer ticker.Stop()
 
 	p.quit = make(chan bool, 1)
+	p.started = true
 
 	p.wg.Add(1)
 	defer p.wg.Done()
@@ -72,13 +85,33 @@ func (p *Process) Quit() {
 		return
 	}
 
-	if p.quit != nil {
+	if p.quit == nil || !p.started {
+		p.logger.Debug("cannot quit stopped process")
+
+		return
+	}
+
+	select {
+	case p.quit <- true:
+		p.wg.Wait()
+		p.started = false
+		p.logger.Info("process stopped")
+	default:
+		p.logger.Debug("process quit already been called")
+	}
+}
+
+// ReportError publishes error to the errors channel.
+// if you do not read errors from the errors channel then after the channel
+// buffer overflows the application exits with a fatal level and the
+// os.Exit(1) exit code.
+func (p *Process) ReportError(err error) {
+	if err != nil {
 		select {
-		case p.quit <- true:
-			p.wg.Wait()
-			p.logger.Info("process stopped")
+		case p.errors <- err:
 		default:
-			p.logger.Debug("process quit already been called")
+			// IMPORTANT: Фактически это мягкий вариант паники приложения.
+			p.logger.Fatalf("process error channel is locked: %v", err)
 		}
 	}
 }
