@@ -7,7 +7,7 @@ import (
 
 // Validation errors.
 var (
-	ErrEmptyStartInterval = errors.New("start_interval must be positive number")
+	ErrInvalidStartInterval = errors.New("start_interval must be positive number")
 )
 
 // Config is config for process.
@@ -24,7 +24,7 @@ func (cfg *Config) Validate() error {
 	}
 
 	if cfg.StartInterval <= 0 {
-		return ErrEmptyStartInterval
+		return ErrInvalidStartInterval
 	}
 
 	return nil
