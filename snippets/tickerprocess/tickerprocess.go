@@ -54,16 +54,21 @@ func (p *Process) Run() {
 		return
 	}
 
-	p.logger.Info("process started")
-
-	ticker := time.NewTicker(p.config.StartInterval)
-	defer ticker.Stop()
-
 	p.quit = make(chan bool, 1)
 	p.started = true
 
 	p.wg.Add(1)
 	defer p.wg.Done()
+
+	p.logger.Info("process started")
+
+	defer func() {
+		p.started = false
+		p.logger.Info("process stopped")
+	}()
+
+	ticker := time.NewTicker(p.config.StartInterval)
+	defer ticker.Stop()
 
 	for {
 		select {
@@ -94,8 +99,6 @@ func (p *Process) Quit() {
 	select {
 	case p.quit <- true:
 		p.wg.Wait()
-		p.started = false
-		p.logger.Info("process stopped")
 	default:
 		p.logger.Debug("process quit already been called")
 	}
