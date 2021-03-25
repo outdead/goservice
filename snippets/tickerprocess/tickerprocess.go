@@ -58,28 +58,8 @@ func (p *Process) Run() {
 	p.started = true
 
 	p.wg.Add(1)
-	defer p.wg.Done()
 
-	p.logger.Info("process started")
-
-	defer func() {
-		p.started = false
-		p.logger.Info("process stopped")
-	}()
-
-	ticker := time.NewTicker(p.config.StartInterval)
-	defer ticker.Stop()
-
-	for {
-		select {
-		case <-ticker.C:
-			p.logger.Debug("process tick...")
-		case <-p.quit:
-			p.logger.Debug("process quit...")
-
-			return
-		}
-	}
+	go p.run()
 }
 
 // Quit stops all processes.
@@ -115,6 +95,28 @@ func (p *Process) ReportError(err error) {
 		default:
 			// IMPORTANT: Фактически это мягкий вариант паники приложения.
 			p.logger.Fatalf("process error channel is locked: %v", err)
+		}
+	}
+}
+
+func (p *Process) run() {
+	defer func() {
+		p.started = false
+		p.logger.Info("process stopped")
+		p.wg.Done()
+	}()
+
+	ticker := time.NewTicker(p.config.StartInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			p.logger.Debug("process tick...")
+		case <-p.quit:
+			p.logger.Debug("process quit...")
+
+			return
 		}
 	}
 }

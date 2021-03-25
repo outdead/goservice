@@ -39,7 +39,7 @@ func TestNewProcess(t *testing.T) {
 
 	processor := tickerprocess.NewProcess(&cfg, repo, log.NewEntry())
 
-	go processor.Run()
+	processor.Run()
 
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
