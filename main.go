@@ -1,13 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"os"
-
-	"github.com/outdead/goservice/internal/app/daemon"
-	"github.com/outdead/goservice/internal/utils/logutil"
-	"github.com/urfave/cli/v2"
-)
+import "github.com/outdead/goservice/internal/app"
 
 // ServiceName contains the name of the service. Displayed in logs and when help
 // command is called.
@@ -20,59 +13,5 @@ const ServiceName = "goservice"
 var ServiceVersion = "0.0.0-develop"
 
 func main() {
-	log := logutil.New(logutil.SetService(ServiceName), logutil.SetVersion(ServiceVersion))
-
-	app := cli.NewApp()
-	app.Name = ServiceName
-	app.Version = ServiceVersion
-	app.Flags = []cli.Flag{
-		&cli.StringFlag{
-			Name:     "config",
-			Aliases:  []string{"c"},
-			Usage:    "Path to config file",
-			Required: true,
-		},
-		&cli.BoolFlag{
-			Name:    "print",
-			Aliases: []string{"p"},
-			Usage:   "Print config file and exit",
-		},
-	}
-
-	app.Action = action(log)
-
-	if err := app.Run(os.Args); err != nil {
-		log.NewEntry().Fatal(err)
-	}
-}
-
-func action(log *logutil.Logger) func(c *cli.Context) error {
-	return func(c *cli.Context) error {
-		cfg, err := daemon.NewConfig(c.String("config"))
-		if err != nil {
-			return fmt.Errorf("new config: %w", err)
-		}
-
-		if c.Bool("print") {
-			log.NewEntry().Info("got -p flag - print config and terminate")
-
-			return cfg.Print()
-		}
-
-		if err := cfg.Validate(); err != nil {
-			return fmt.Errorf("validate config: %w", err)
-		}
-
-		log.Customize(&cfg.App.Log)
-
-		d := daemon.NewDaemon(cfg, log.NewEntry())
-
-		defer func() {
-			if err := d.Close(); err != nil {
-				log.NewEntry().Errorf("close daemon err: %s", err)
-			}
-		}()
-
-		return d.Run()
-	}
+	app.New(ServiceName, ServiceVersion).Run()
 }
