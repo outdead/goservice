@@ -9,7 +9,7 @@ import (
 
 	"github.com/outdead/goservice/internal/app/server/http"
 	"github.com/outdead/goservice/internal/app/server/profiler"
-	"github.com/outdead/goservice/internal/utils/connector"
+	"github.com/outdead/goservice/internal/connector"
 	"github.com/outdead/goservice/internal/utils/logutil"
 )
 

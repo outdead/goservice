@@ -3,11 +3,11 @@ package connector
 import (
 	"fmt"
 
-	"github.com/outdead/goservice/internal/utils/connector/clickhouse"
-	"github.com/outdead/goservice/internal/utils/connector/elasticsearch"
-	"github.com/outdead/goservice/internal/utils/connector/postgres"
-	"github.com/outdead/goservice/internal/utils/connector/rabbit"
-	"github.com/outdead/goservice/internal/utils/connector/redis"
+	"github.com/outdead/goservice/internal/utils/driver/clickhouse"
+	"github.com/outdead/goservice/internal/utils/driver/elasticsearch"
+	"github.com/outdead/goservice/internal/utils/driver/postgres"
+	"github.com/outdead/goservice/internal/utils/driver/rabbit"
+	"github.com/outdead/goservice/internal/utils/driver/redis"
 )
 
 // Config contains credentials for databases.

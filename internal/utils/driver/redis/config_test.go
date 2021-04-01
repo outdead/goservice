@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/outdead/goservice/internal/utils/connector/redis"
+	"github.com/outdead/goservice/internal/utils/driver/redis"
 )
 
 var config = redis.Config{

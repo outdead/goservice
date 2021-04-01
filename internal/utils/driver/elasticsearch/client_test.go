@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/outdead/goservice/internal/utils/connector/elasticsearch"
+	"github.com/outdead/goservice/internal/utils/driver/elasticsearch"
 )
 
 // FakeModel implements Model interface.

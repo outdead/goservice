@@ -8,7 +8,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/outdead/goservice/internal/utils/connector"
+	"github.com/outdead/goservice/internal/connector"
 	"github.com/outdead/goservice/internal/utils/logutil"
 	"gopkg.in/yaml.v3"
 )
