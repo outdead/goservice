@@ -105,3 +105,8 @@ func (db *DB) Close() error {
 
 	return db.db.Close()
 }
+
+// ErrNoRows returns true if error is pg.ErrNoRows.
+func (db *DB) IsErrNoRows(err error) bool {
+	return errors.Is(err, pg.ErrNoRows)
+}

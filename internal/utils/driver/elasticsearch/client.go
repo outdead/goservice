@@ -90,3 +90,8 @@ func (client *Client) Close() {
 
 	client.conn.Stop()
 }
+
+// IsErrNotFound returns true if error is elastic.ErrNotFound.
+func (client *Client) IsErrNotFound(err error) bool {
+	return elastic.IsNotFound(err)
+}

@@ -15,6 +15,8 @@ import (
 type Connector interface {
 	io.Closer
 	CheckConnections() error
+	IsErrNotFound(err error) bool
+
 	PG() *postgres.DB
 	CH() *clickhouse.DB
 	ELA() *elasticsearch.Client
@@ -74,6 +76,14 @@ func (conn *connector) CheckConnections() error {
 	}
 
 	return nil
+}
+
+// IsErrNotFound returns true if the passed error indicates that there is
+// no data in the database.
+func (conn *connector) IsErrNotFound(err error) bool {
+	return conn.ELA().IsErrNotFound(err) ||
+		conn.PG().IsErrNoRows(err) ||
+		conn.Redis().IsErrNoRows(err)
 }
 
 // CH returns pointer to clickhouse.DB.
