@@ -70,7 +70,7 @@ func (a *App) action() func(c *cli.Context) error {
 		if c.Bool("print") {
 			a.logger.NewEntry().Info("got -p flag - print config and terminate")
 
-			return cfg.Print()
+			return cfg.Print(os.Stdout)
 		}
 
 		if err := cfg.Validate(); err != nil {

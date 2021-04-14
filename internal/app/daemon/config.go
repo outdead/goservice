@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"path"
 	"time"
@@ -87,13 +88,13 @@ func (cfg *Config) Validate() error {
 }
 
 // Print print config to console.
-func (cfg *Config) Print() error {
+func (cfg *Config) Print(w io.Writer) error {
 	js, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return fmt.Errorf("print config: %w", err)
 	}
 
-	fmt.Println(string(js))
+	fmt.Fprintln(w, string(js))
 
 	return nil
 }
