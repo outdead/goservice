@@ -8,8 +8,7 @@ import (
 )
 
 // Repository describes getting and changing data methods.
-type Repository interface {
-}
+type Repository interface{}
 
 // Process performs work in a separate goroutine.
 type Process struct {

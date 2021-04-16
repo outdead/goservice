@@ -2,7 +2,6 @@
 package rabbit
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/assembla/cony"
@@ -217,8 +216,6 @@ func normalizeArgs(args map[string]interface{}) map[string]interface{} {
 			case float64:
 				newArgs[key] = uint8(value)
 			default:
-				fmt.Printf("%v %t", args[key], args[key])
-
 				newArgs[key] = uint8(0)
 			}
 		default:

@@ -1,30 +1,13 @@
 package postgres
 
 import (
-	"context"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/go-pg/pg/v9"
 )
-
-// QueryLogger is a queries logger.
-type QueryLogger struct{}
-
-// BeforeQuery implements BeforeQuery of the pg.QueryHook interface.
-// Called before every query and does nothing.
-func (d QueryLogger) BeforeQuery(c context.Context, q *pg.QueryEvent) (context.Context, error) {
-	return c, nil
-}
-
-// AfterQuery prints the executed query to stdout.
-// Called after the query has completed.
-func (d QueryLogger) AfterQuery(c context.Context, q *pg.QueryEvent) error {
-	fmt.Println(q.FormattedQuery())
-
-	return nil
-}
 
 // ErrLostConnection is returned when connection to database was lost.
 var ErrLostConnection = errors.New("postgres: connection is lost")
@@ -47,7 +30,7 @@ func NewDB(cfg *Config) (*DB, error) {
 	})}
 
 	if cfg.Debug {
-		db.db.AddQueryHook(QueryLogger{})
+		db.db.AddQueryHook(NewQueryLogger(os.Stdout))
 	}
 
 	if _, err := db.GetServerTime(); err != nil {
@@ -59,7 +42,7 @@ func NewDB(cfg *Config) (*DB, error) {
 	return &db, nil
 }
 
-// Dialer returns a pointer to the Dialer with which the connection was made.
+// Config returns a pointer to the Dialer with which the connection was made.
 func (db *DB) Config() *Config {
 	return db.config
 }
@@ -69,7 +52,7 @@ func (db *DB) DB() *pg.DB {
 	return db.db
 }
 
-// IsConnected() checks connection status to database.
+// IsConnected checks connection status to database.
 func (db *DB) IsConnected() bool {
 	if db == nil {
 		return false
@@ -106,7 +89,7 @@ func (db *DB) Close() error {
 	return db.db.Close()
 }
 
-// ErrNoRows returns true if error is pg.ErrNoRows.
+// IsErrNoRows returns true if error is pg.ErrNoRows.
 func (db *DB) IsErrNoRows(err error) bool {
 	return errors.Is(err, pg.ErrNoRows)
 }
